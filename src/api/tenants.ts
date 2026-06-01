@@ -32,3 +32,9 @@ export const getTenantStats = async (tenantId: string): Promise<TenantStats> => 
   const { data } = await apiClient.get<TenantStats>(`/tenants/${tenantId}/stats`);
   return data;
 };
+
+// ── Users ──────────────────────────────────────────────────────────────────────
+
+export const createTenantUser = async (email: string, password: string, tenantId: string): Promise<void> => {
+  await apiClient.post('/users', { email, password, tenantId });
+};
