@@ -44,6 +44,7 @@ export default function AppLayout() {
             <>
               {navLink("/", "Tenants", true)}
               {navLink("/users", "Usuarios")}
+              {navLink("/change-password", "Cambiar contraseña")}
             </>
           )}
 
@@ -51,11 +52,10 @@ export default function AppLayout() {
             <>
               {navLink(`/tenants/${user.tenantId}`, "Mi configuración")}
               {navLink(`/tenants/${user.tenantId}/stats`, "Métricas")}
+              {navLink("/change-password", "Cambiar contraseña")}
             </>
           )}
         </nav>
-
-        {navLink("/change-password", "Cambiar contraseña")}
 
         <div className="p-4 border-t">
           <Button variant="outline" className="w-full" onClick={handleSignOut}>
