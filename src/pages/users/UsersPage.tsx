@@ -1,26 +1,42 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getUsers, deleteUser } from '../../api/tenants';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getUsers, deleteUser } from "../../api/tenants";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from '../../components/ui/table';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
+import { toast } from "sonner";
 
 export default function UsersPage() {
   const queryClient = useQueryClient();
 
   const { data: users = [], isLoading } = useQuery({
-    queryKey: ['users'],
+    queryKey: ["users"],
     queryFn: getUsers,
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteUser,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("Usuario eliminado correctamente.");
+    },
+    onError: () => {
+      toast.error("Error al eliminar el usuario.");
+    },
   });
 
   const handleDelete = (email: string) => {
-    if (confirm(`¿Eliminar el usuario "${email}"? Esta acción no se puede deshacer.`)) {
+    if (
+      confirm(
+        `¿Eliminar el usuario "${email}"? Esta acción no se puede deshacer.`,
+      )
+    ) {
       deleteMutation.mutate(email);
     }
   };
@@ -29,7 +45,9 @@ export default function UsersPage() {
     <div className="p-8">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Usuarios</h1>
-        <p className="text-gray-500 mt-1">Todos los usuarios registrados en el sistema</p>
+        <p className="text-gray-500 mt-1">
+          Todos los usuarios registrados en el sistema
+        </p>
       </div>
 
       {isLoading ? (
@@ -53,22 +71,26 @@ export default function UsersPage() {
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.email}</TableCell>
                   <TableCell>
-                    <Badge variant={user.role === 'superadmin' ? 'default' : 'secondary'}>
+                    <Badge
+                      variant={
+                        user.role === "superadmin" ? "default" : "secondary"
+                      }
+                    >
                       {user.role}
                     </Badge>
                   </TableCell>
                   <TableCell className="font-mono text-sm text-gray-500">
-                    {user.tenantId ?? '—'}
+                    {user.tenantId ?? "—"}
                   </TableCell>
                   <TableCell className="text-gray-500 text-sm">
-                    {new Date(user.createdAtUtc).toLocaleDateString('es-AR')}
+                    {new Date(user.createdAtUtc).toLocaleDateString("es-AR")}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => handleDelete(user.email)}
-                      disabled={user.role === 'superadmin'}
+                      disabled={user.role === "superadmin"}
                     >
                       Eliminar
                     </Button>

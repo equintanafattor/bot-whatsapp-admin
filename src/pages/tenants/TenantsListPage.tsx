@@ -1,73 +1,106 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { getTenants, deleteTenant, createTenantUser } from '../../api/tenants';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { getTenants, deleteTenant, createTenantUser } from "../../api/tenants";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from '../../components/ui/table';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
-} from '../../components/ui/dialog';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "../../components/ui/dialog";
+import { toast } from "sonner";
 
 export default function TenantsListPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [userDialog, setUserDialog] = useState<{ open: boolean; tenantId: string }>({
+  const [userDialog, setUserDialog] = useState<{
+    open: boolean;
+    tenantId: string;
+  }>({
     open: false,
-    tenantId: ''
+    tenantId: "",
   });
-  const [userForm, setUserForm] = useState({ email: '', password: '' });
-  const [userError, setUserError] = useState('');
+  const [userForm, setUserForm] = useState({ email: "", password: "" });
+  const [userError, setUserError] = useState("");
 
   const { data: tenants = [], isLoading } = useQuery({
-    queryKey: ['tenants'],
+    queryKey: ["tenants"],
     queryFn: getTenants,
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteTenant,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tenants'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tenants"] });
+      toast.success("Tenant eliminado correctamente.");
+    },
+    onError: () => {
+      toast.error("Error al eliminar el tenant.");
+    },
   });
 
   const createUserMutation = useMutation({
-    mutationFn: ({ email, password, tenantId }: { email: string; password: string; tenantId: string }) =>
-      createTenantUser(email, password, tenantId),
+    mutationFn: ({
+      email,
+      password,
+      tenantId,
+    }: {
+      email: string;
+      password: string;
+      tenantId: string;
+    }) => createTenantUser(email, password, tenantId),
     onSuccess: () => {
-      setUserDialog({ open: false, tenantId: '' });
-      setUserForm({ email: '', password: '' });
-      setUserError('');
+      setUserDialog({ open: false, tenantId: "" });
+      setUserForm({ email: "", password: "" });
+      setUserError("");
+      toast.success("Usuario creado correctamente.");
     },
     onError: () => {
-      setUserError('Error al crear el usuario. Verificá que el email no esté en uso.');
-    }
+      setUserError(
+        "Error al crear el usuario. Verificá que el email no esté en uso.",
+      );
+    },
   });
 
   const handleDelete = (tenantId: string) => {
-    if (confirm(`¿Eliminar el tenant "${tenantId}"? Esta acción no se puede deshacer.`)) {
+    if (
+      confirm(
+        `¿Eliminar el tenant "${tenantId}"? Esta acción no se puede deshacer.`,
+      )
+    ) {
       deleteMutation.mutate(tenantId);
     }
   };
 
   const handleOpenUserDialog = (tenantId: string) => {
-    setUserForm({ email: '', password: '' });
-    setUserError('');
+    setUserForm({ email: "", password: "" });
+    setUserError("");
     setUserDialog({ open: true, tenantId });
   };
 
   const handleCreateUser = () => {
     if (!userForm.email || !userForm.password) {
-      setUserError('Email y contraseña son obligatorios.');
+      setUserError("Email y contraseña son obligatorios.");
       return;
     }
     createUserMutation.mutate({
       email: userForm.email,
       password: userForm.password,
-      tenantId: userDialog.tenantId
+      tenantId: userDialog.tenantId,
     });
   };
 
@@ -78,9 +111,7 @@ export default function TenantsListPage() {
           <h1 className="text-2xl font-bold text-gray-900">Tenants</h1>
           <p className="text-gray-500 mt-1">Todos los negocios registrados</p>
         </div>
-        <Button onClick={() => navigate('/tenants/new')}>
-          + Nuevo tenant
-        </Button>
+        <Button onClick={() => navigate("/tenants/new")}>+ Nuevo tenant</Button>
       </div>
 
       {isLoading ? (
@@ -102,8 +133,12 @@ export default function TenantsListPage() {
             <TableBody>
               {tenants.map((tenant) => (
                 <TableRow key={tenant.tenantId}>
-                  <TableCell className="font-mono text-sm">{tenant.tenantId}</TableCell>
-                  <TableCell className="font-medium">{tenant.businessName}</TableCell>
+                  <TableCell className="font-mono text-sm">
+                    {tenant.tenantId}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {tenant.businessName}
+                  </TableCell>
                   <TableCell>
                     {tenant.webhookUrl ? (
                       <Badge variant="secondary">Configurado</Badge>
@@ -112,20 +147,24 @@ export default function TenantsListPage() {
                     )}
                   </TableCell>
                   <TableCell className="text-gray-500 text-sm">
-                    {new Date(tenant.createdAtUtc).toLocaleDateString('es-AR')}
+                    {new Date(tenant.createdAtUtc).toLocaleDateString("es-AR")}
                   </TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => navigate(`/tenants/${tenant.tenantId}/conversations`)}
+                      onClick={() =>
+                        navigate(`/tenants/${tenant.tenantId}/conversations`)
+                      }
                     >
                       Conversaciones
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => navigate(`/tenants/${tenant.tenantId}/stats`)}
+                      onClick={() =>
+                        navigate(`/tenants/${tenant.tenantId}/stats`)
+                      }
                     >
                       Métricas
                     </Button>
@@ -159,7 +198,10 @@ export default function TenantsListPage() {
       )}
 
       {/* Dialog para crear usuario tenant */}
-      <Dialog open={userDialog.open} onOpenChange={(open) => setUserDialog({ ...userDialog, open })}>
+      <Dialog
+        open={userDialog.open}
+        onOpenChange={(open) => setUserDialog({ ...userDialog, open })}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Crear usuario para {userDialog.tenantId}</DialogTitle>
@@ -172,7 +214,9 @@ export default function TenantsListPage() {
                 type="email"
                 placeholder="cliente@negocio.com"
                 value={userForm.email}
-                onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
+                onChange={(e) =>
+                  setUserForm({ ...userForm, email: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -182,7 +226,9 @@ export default function TenantsListPage() {
                 type="password"
                 placeholder="••••••••"
                 value={userForm.password}
-                onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
+                onChange={(e) =>
+                  setUserForm({ ...userForm, password: e.target.value })
+                }
               />
             </div>
             {userError && <p className="text-sm text-red-500">{userError}</p>}
@@ -198,7 +244,7 @@ export default function TenantsListPage() {
               onClick={handleCreateUser}
               disabled={createUserMutation.isPending}
             >
-              {createUserMutation.isPending ? 'Creando...' : 'Crear usuario'}
+              {createUserMutation.isPending ? "Creando..." : "Crear usuario"}
             </Button>
           </DialogFooter>
         </DialogContent>
