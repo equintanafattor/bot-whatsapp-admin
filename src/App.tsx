@@ -7,6 +7,7 @@ import TenantsListPage from "./pages/tenants/TenantsListPage";
 import TenantFormPage from "./pages/tenants/TenantFormPage";
 import TenantStatsPage from "./pages/tenants/TenantStatsPage";
 import ConversationsPage from "./pages/tenants/ConversationsPage";
+import ChangePasswordPage from './pages/profile/ChangePasswordPage';
 import UsersPage from "./pages/users/UsersPage";
 import { Toaster } from "./components/ui/sonner";
 
@@ -56,6 +57,7 @@ export default function App() {
                 path="/tenants/:tenantId/conversations"
                 element={<ConversationsPage />}
               />
+              <Route path="/change-password" element={<ChangePasswordPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

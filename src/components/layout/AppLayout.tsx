@@ -1,6 +1,6 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../lib/auth-context';
-import { Button } from '../ui/button';
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../../lib/auth-context";
+import { Button } from "../ui/button";
 
 export default function AppLayout() {
   const { user, signOut, isSuperAdmin } = useAuth();
@@ -8,7 +8,7 @@ export default function AppLayout() {
 
   const handleSignOut = () => {
     signOut();
-    navigate('/login');
+    navigate("/login");
   };
 
   const navLink = (to: string, label: string, end = false) => (
@@ -18,8 +18,8 @@ export default function AppLayout() {
       className={({ isActive }) =>
         `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
           isActive
-            ? 'bg-gray-100 text-gray-900'
-            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+            ? "bg-gray-100 text-gray-900"
+            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
         }`
       }
     >
@@ -42,18 +42,20 @@ export default function AppLayout() {
         <nav className="flex-1 p-4 space-y-1">
           {isSuperAdmin && (
             <>
-              {navLink('/', 'Tenants', true)}
-              {navLink('/users', 'Usuarios')}
+              {navLink("/", "Tenants", true)}
+              {navLink("/users", "Usuarios")}
             </>
           )}
 
           {!isSuperAdmin && user?.tenantId && (
             <>
-              {navLink(`/tenants/${user.tenantId}`, 'Mi configuración')}
-              {navLink(`/tenants/${user.tenantId}/stats`, 'Métricas')}
+              {navLink(`/tenants/${user.tenantId}`, "Mi configuración")}
+              {navLink(`/tenants/${user.tenantId}/stats`, "Métricas")}
             </>
           )}
         </nav>
+
+        {navLink("/change-password", "Cambiar contraseña")}
 
         <div className="p-4 border-t">
           <Button variant="outline" className="w-full" onClick={handleSignOut}>

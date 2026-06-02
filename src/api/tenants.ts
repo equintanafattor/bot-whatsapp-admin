@@ -107,3 +107,13 @@ export const getTenantConversations = async (
   );
   return data;
 };
+
+export const changePassword = async (
+  currentPassword: string,
+  newPassword: string,
+): Promise<void> => {
+  await apiClient.post("/users/change-password", {
+    currentPassword,
+    newPassword,
+  });
+};
