@@ -112,7 +112,7 @@ export const changePassword = async (
   currentPassword: string,
   newPassword: string,
 ): Promise<void> => {
-  await apiClient.post("/users/change-password", {
+  await apiClient.post("/profile/change-password", {
     currentPassword,
     newPassword,
   });
