@@ -6,6 +6,7 @@ import LoginPage from './pages/auth/LoginPage';
 import TenantsListPage from './pages/tenants/TenantsListPage';
 import TenantFormPage from './pages/tenants/TenantFormPage';
 import TenantStatsPage from './pages/tenants/TenantStatsPage';
+import UsersPage from './pages/users/UsersPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,7 @@ export default function App() {
               }
             >
               <Route index element={<HomeRedirect />} />
+              <Route path="users" element={<UsersPage />} />
               <Route path="tenants/new" element={<TenantFormPage />} />
               <Route path="tenants/:tenantId" element={<TenantFormPage />} />
               <Route path="tenants/:tenantId/stats" element={<TenantStatsPage />} />

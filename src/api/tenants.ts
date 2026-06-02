@@ -1,40 +1,82 @@
-import { apiClient } from './client';
-import type { AuthResponse, TenantConfiguration, TenantStats, UpsertTenantRequest } from '../types';
+import { apiClient } from "./client";
+import type {
+  AuthResponse,
+  TenantConfiguration,
+  TenantStats,
+  UpsertTenantRequest,
+} from "../types";
 
 // ── Auth ───────────────────────────────────────────────────────────────────────
 
-export const login = async (email: string, password: string): Promise<AuthResponse> => {
-  const { data } = await apiClient.post<AuthResponse>('/auth/login', { email, password });
+export const login = async (
+  email: string,
+  password: string,
+): Promise<AuthResponse> => {
+  const { data } = await apiClient.post<AuthResponse>("/auth/login", {
+    email,
+    password,
+  });
   return data;
 };
 
 // ── Tenants ────────────────────────────────────────────────────────────────────
 
 export const getTenants = async (): Promise<TenantConfiguration[]> => {
-  const { data } = await apiClient.get<TenantConfiguration[]>('/tenants');
+  const { data } = await apiClient.get<TenantConfiguration[]>("/tenants");
   return data;
 };
 
-export const getTenant = async (tenantId: string): Promise<TenantConfiguration> => {
-  const { data } = await apiClient.get<TenantConfiguration>(`/tenants/${tenantId}`);
+export const getTenant = async (
+  tenantId: string,
+): Promise<TenantConfiguration> => {
+  const { data } = await apiClient.get<TenantConfiguration>(
+    `/tenants/${tenantId}`,
+  );
   return data;
 };
 
-export const upsertTenant = async (request: UpsertTenantRequest): Promise<void> => {
-  await apiClient.post('/tenants', request);
+export const upsertTenant = async (
+  request: UpsertTenantRequest,
+): Promise<void> => {
+  await apiClient.post("/tenants", request);
 };
 
 export const deleteTenant = async (tenantId: string): Promise<void> => {
   await apiClient.delete(`/tenants/${tenantId}`);
 };
 
-export const getTenantStats = async (tenantId: string): Promise<TenantStats> => {
-  const { data } = await apiClient.get<TenantStats>(`/tenants/${tenantId}/stats`);
+export const getTenantStats = async (
+  tenantId: string,
+): Promise<TenantStats> => {
+  const { data } = await apiClient.get<TenantStats>(
+    `/tenants/${tenantId}/stats`,
+  );
   return data;
 };
 
 // ── Users ──────────────────────────────────────────────────────────────────────
 
-export const createTenantUser = async (email: string, password: string, tenantId: string): Promise<void> => {
-  await apiClient.post('/users', { email, password, tenantId });
+export interface UserRecord {
+  id: string;
+  email: string;
+  role: string;
+  tenantId?: string;
+  createdAtUtc: string;
+}
+
+export const getUsers = async (): Promise<UserRecord[]> => {
+  const { data } = await apiClient.get<UserRecord[]>("/users");
+  return data;
+};
+
+export const createTenantUser = async (
+  email: string,
+  password: string,
+  tenantId: string,
+): Promise<void> => {
+  await apiClient.post("/users", { email, password, tenantId });
+};
+
+export const deleteUser = async (email: string): Promise<void> => {
+  await apiClient.delete(`/users/${encodeURIComponent(email)}`);
 };

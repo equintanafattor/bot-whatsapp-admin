@@ -11,6 +11,22 @@ export default function AppLayout() {
     navigate('/login');
   };
 
+  const navLink = (to: string, label: string, end = false) => (
+    <NavLink
+      to={to}
+      end={end}
+      className={({ isActive }) =>
+        `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+          isActive
+            ? 'bg-gray-100 text-gray-900'
+            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+        }`
+      }
+    >
+      {label}
+    </NavLink>
+  );
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -25,47 +41,16 @@ export default function AppLayout() {
 
         <nav className="flex-1 p-4 space-y-1">
           {isSuperAdmin && (
-            <NavLink
-              to="/"
-              end
-              className={({ isActive }) =>
-                `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`
-              }
-            >
-              Todos los tenants
-            </NavLink>
+            <>
+              {navLink('/', 'Tenants', true)}
+              {navLink('/users', 'Usuarios')}
+            </>
           )}
 
           {!isSuperAdmin && user?.tenantId && (
             <>
-              <NavLink
-                to={`/tenants/${user.tenantId}`}
-                className={({ isActive }) =>
-                  `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`
-                }
-              >
-                Mi configuración
-              </NavLink>
-              <NavLink
-                to={`/tenants/${user.tenantId}/stats`}
-                className={({ isActive }) =>
-                  `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`
-                }
-              >
-                Métricas
-              </NavLink>
+              {navLink(`/tenants/${user.tenantId}`, 'Mi configuración')}
+              {navLink(`/tenants/${user.tenantId}/stats`, 'Métricas')}
             </>
           )}
         </nav>
