@@ -15,12 +15,17 @@ import {
 import { toast } from "sonner";
 
 export default function TenantFormPage() {
-  const { tenantId } = useParams<{ tenantId: string }>();
+  // const { tenantId } = useParams<{ tenantId: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isSuperAdmin } = useAuth();
 
+  // const isNew = tenantId === "new";
+
+  const { tenantId } = useParams<{ tenantId: string }>();
+  console.log("tenantId:", tenantId);
   const isNew = tenantId === "new";
+  console.log("isNew:", isNew);
 
   const { data: tenant, isLoading } = useQuery({
     queryKey: ["tenant", tenantId],
