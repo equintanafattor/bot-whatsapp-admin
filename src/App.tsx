@@ -6,6 +6,7 @@ import LoginPage from './pages/auth/LoginPage';
 import TenantsListPage from './pages/tenants/TenantsListPage';
 import TenantFormPage from './pages/tenants/TenantFormPage';
 import TenantStatsPage from './pages/tenants/TenantStatsPage';
+import ConversationsPage from './pages/tenants/ConversationsPage';
 import UsersPage from './pages/users/UsersPage';
 
 const queryClient = new QueryClient({
@@ -46,6 +47,7 @@ export default function App() {
               <Route path="tenants/new" element={<TenantFormPage />} />
               <Route path="tenants/:tenantId" element={<TenantFormPage />} />
               <Route path="tenants/:tenantId/stats" element={<TenantStatsPage />} />
+              <Route path="tenants/:tenantId/conversations" element={<ConversationsPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

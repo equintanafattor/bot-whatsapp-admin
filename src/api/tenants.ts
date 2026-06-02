@@ -80,3 +80,30 @@ export const createTenantUser = async (
 export const deleteUser = async (email: string): Promise<void> => {
   await apiClient.delete(`/users/${encodeURIComponent(email)}`);
 };
+
+export interface ConversationRecord {
+  id: string;
+  phoneNumber: string;
+  state: string;
+  createdAtUtc: string;
+  updatedAtUtc: string;
+  lastMessage?: string;
+}
+
+export interface ConversationsResponse {
+  conversations: ConversationRecord[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export const getTenantConversations = async (
+  tenantId: string,
+  page = 1,
+  pageSize = 20,
+): Promise<ConversationsResponse> => {
+  const { data } = await apiClient.get<ConversationsResponse>(
+    `/tenants/${tenantId}/conversations?page=${page}&pageSize=${pageSize}`,
+  );
+  return data;
+};

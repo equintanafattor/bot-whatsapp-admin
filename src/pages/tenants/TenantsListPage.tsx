@@ -118,6 +118,13 @@ export default function TenantsListPage() {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() => navigate(`/tenants/${tenant.tenantId}/conversations`)}
+                    >
+                      Conversaciones
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => navigate(`/tenants/${tenant.tenantId}/stats`)}
                     >
                       Métricas
