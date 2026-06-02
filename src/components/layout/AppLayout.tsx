@@ -52,6 +52,10 @@ export default function AppLayout() {
             <>
               {navLink(`/tenants/${user.tenantId}`, "Mi configuración")}
               {navLink(`/tenants/${user.tenantId}/stats`, "Métricas")}
+              {navLink(
+                `/tenants/${user.tenantId}/conversations`,
+                "Conversaciones",
+              )}
               {navLink("/change-password", "Cambiar contraseña")}
             </>
           )}
