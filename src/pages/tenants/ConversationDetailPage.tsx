@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getConversationDetail, getTenant } from "../../api/tenants";
+import { getConversationDetail } from "../../api/tenants";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 
@@ -22,12 +22,6 @@ export default function ConversationDetailPage() {
     conversationId: string;
   }>();
   const navigate = useNavigate();
-
-  const { data: tenant } = useQuery({
-    queryKey: ["tenant", tenantId],
-    queryFn: () => getTenant(tenantId!),
-    enabled: !!tenantId,
-  });
 
   const { data: conversation, isLoading } = useQuery({
     queryKey: ["conversation", tenantId, conversationId],
