@@ -1,15 +1,16 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider, useAuth } from "./lib/auth-context";
-import AppLayout from "./components/layout/AppLayout";
-import LoginPage from "./pages/auth/LoginPage";
-import TenantsListPage from "./pages/tenants/TenantsListPage";
-import TenantFormPage from "./pages/tenants/TenantFormPage";
-import TenantStatsPage from "./pages/tenants/TenantStatsPage";
-import ConversationsPage from "./pages/tenants/ConversationsPage";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider, useAuth } from './lib/auth-context';
+import AppLayout from './components/layout/AppLayout';
+import LoginPage from './pages/auth/LoginPage';
+import TenantsListPage from './pages/tenants/TenantsListPage';
+import TenantFormPage from './pages/tenants/TenantFormPage';
+import TenantStatsPage from './pages/tenants/TenantStatsPage';
+import ConversationsPage from './pages/tenants/ConversationsPage';
+import ConversationDetailPage from './pages/tenants/ConversationDetailPage';
+import UsersPage from './pages/users/UsersPage';
 import ChangePasswordPage from './pages/profile/ChangePasswordPage';
-import UsersPage from "./pages/users/UsersPage";
-import { Toaster } from "./components/ui/sonner";
+import { Toaster } from './components/ui/sonner';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,8 +26,7 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 function HomeRedirect() {
   const { isSuperAdmin, user } = useAuth();
   if (isSuperAdmin) return <TenantsListPage />;
-  if (user?.tenantId)
-    return <Navigate to={`/tenants/${user.tenantId}/stats`} replace />;
+  if (user?.tenantId) return <Navigate to={`/tenants/${user.tenantId}/stats`} replace />;
   return <p className="p-8 text-gray-500">Sin acceso.</p>;
 }
 
@@ -46,23 +46,18 @@ export default function App() {
               }
             >
               <Route index element={<HomeRedirect />} />
-              <Route path="users" element={<UsersPage />} />
+              <Route path="/users" element={<UsersPage />} />
+              <Route path="/change-password" element={<ChangePasswordPage />} />
               <Route path="/tenants/new" element={<TenantFormPage />} />
               <Route path="/tenants/:tenantId" element={<TenantFormPage />} />
-              <Route
-                path="/tenants/:tenantId/stats"
-                element={<TenantStatsPage />}
-              />
-              <Route
-                path="/tenants/:tenantId/conversations"
-                element={<ConversationsPage />}
-              />
-              <Route path="/change-password" element={<ChangePasswordPage />} />
+              <Route path="/tenants/:tenantId/stats" element={<TenantStatsPage />} />
+              <Route path="/tenants/:tenantId/conversations" element={<ConversationsPage />} />
+              <Route path="/tenants/:tenantId/conversations/:conversationId" element={<ConversationDetailPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
+        <Toaster position="top-right" richColors />
       </AuthProvider>
-      <Toaster position="top-right" richColors />
     </QueryClientProvider>
   );
 }

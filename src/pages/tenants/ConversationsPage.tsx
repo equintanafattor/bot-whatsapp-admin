@@ -1,17 +1,28 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getTenantConversations, getTenant } from '../../api/tenants';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getTenantConversations, getTenant } from "../../api/tenants";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from '../../components/ui/table';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
 
-const STATE_LABELS: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  active:           { label: 'Activa',           variant: 'default' },
-  completed:        { label: 'Completada',        variant: 'secondary' },
-  handed_to_human:  { label: 'Derivada a humano', variant: 'destructive' },
+const STATE_LABELS: Record<
+  string,
+  {
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline";
+  }
+> = {
+  active: { label: "Activa", variant: "default" },
+  completed: { label: "Completada", variant: "secondary" },
+  handed_to_human: { label: "Derivada a humano", variant: "destructive" },
 };
 
 export default function ConversationsPage() {
@@ -21,13 +32,13 @@ export default function ConversationsPage() {
   const pageSize = 20;
 
   const { data: tenant } = useQuery({
-    queryKey: ['tenant', tenantId],
+    queryKey: ["tenant", tenantId],
     queryFn: () => getTenant(tenantId!),
     enabled: !!tenantId,
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['conversations', tenantId, page],
+    queryKey: ["conversations", tenantId, page],
     queryFn: () => getTenantConversations(tenantId!, page, pageSize),
     enabled: !!tenantId,
   });
@@ -42,7 +53,7 @@ export default function ConversationsPage() {
             Conversaciones — {tenant?.businessName ?? tenantId}
           </h1>
           <p className="text-gray-500 mt-1">
-            {data ? `${data.total} conversaciones en total` : ''}
+            {data ? `${data.total} conversaciones en total` : ""}
           </p>
         </div>
         <Button variant="outline" onClick={() => navigate(-1)}>
@@ -69,11 +80,22 @@ export default function ConversationsPage() {
               </TableHeader>
               <TableBody>
                 {data.conversations.map((conv) => {
-                  const stateInfo = STATE_LABELS[conv.state] ?? { label: conv.state, variant: 'outline' as const };
+                  const stateInfo = STATE_LABELS[conv.state] ?? {
+                    label: conv.state,
+                    variant: "outline" as const,
+                  };
                   return (
-                    <TableRow key={conv.id}>
+                    <TableRow
+                      key={conv.id}
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() =>
+                        navigate(
+                          `/tenants/${tenantId}/conversations/${conv.id}`,
+                        )
+                      }
+                    >
                       <TableCell className="font-mono text-sm">
-                        {conv.phoneNumber.replace('whatsapp:', '')}
+                        {conv.phoneNumber.replace("whatsapp:", "")}
                       </TableCell>
                       <TableCell>
                         <Badge variant={stateInfo.variant}>
@@ -81,13 +103,15 @@ export default function ConversationsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-gray-600 max-w-xs truncate">
-                        {conv.lastMessage ?? '—'}
+                        {conv.lastMessage ?? "—"}
                       </TableCell>
                       <TableCell className="text-gray-500 text-sm">
-                        {new Date(conv.updatedAtUtc).toLocaleString('es-AR')}
+                        {new Date(conv.updatedAtUtc).toLocaleString("es-AR")}
                       </TableCell>
                       <TableCell className="text-gray-500 text-sm">
-                        {new Date(conv.createdAtUtc).toLocaleDateString('es-AR')}
+                        {new Date(conv.createdAtUtc).toLocaleDateString(
+                          "es-AR",
+                        )}
                       </TableCell>
                     </TableRow>
                   );
@@ -106,7 +130,7 @@ export default function ConversationsPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setPage(p => p - 1)}
+                  onClick={() => setPage((p) => p - 1)}
                   disabled={page === 1}
                 >
                   Anterior
@@ -114,7 +138,7 @@ export default function ConversationsPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setPage(p => p + 1)}
+                  onClick={() => setPage((p) => p + 1)}
                   disabled={page === totalPages}
                 >
                   Siguiente

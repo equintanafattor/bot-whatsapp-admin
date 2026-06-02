@@ -117,3 +117,29 @@ export const changePassword = async (
     newPassword,
   });
 };
+
+export interface MessageRecord {
+  id: string;
+  direction: "inbound" | "outbound";
+  text: string;
+  createdAtUtc: string;
+}
+
+export interface ConversationDetail {
+  id: string;
+  phoneNumber: string;
+  state: string;
+  createdAtUtc: string;
+  updatedAtUtc: string;
+  messages: MessageRecord[];
+}
+
+export const getConversationDetail = async (
+  tenantId: string,
+  conversationId: string,
+): Promise<ConversationDetail> => {
+  const { data } = await apiClient.get<ConversationDetail>(
+    `/tenants/${tenantId}/conversations/${conversationId}`,
+  );
+  return data;
+};
