@@ -24,7 +24,7 @@ export default function TenantFormPage() {
 
   const { tenantId } = useParams<{ tenantId: string }>();
   console.log("tenantId:", tenantId);
-  const isNew = tenantId === "new";
+  const isNew = !tenantId || tenantId === 'new';
   console.log("isNew:", isNew);
 
   const { data: tenant, isLoading } = useQuery({
