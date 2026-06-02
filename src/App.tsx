@@ -46,14 +46,14 @@ export default function App() {
             >
               <Route index element={<HomeRedirect />} />
               <Route path="users" element={<UsersPage />} />
-              <Route path="tenants/new" element={<TenantFormPage />} />
-              <Route path="tenants/:tenantId" element={<TenantFormPage />} />
+              <Route path="/tenants/new" element={<TenantFormPage />} />
+              <Route path="/tenants/:tenantId" element={<TenantFormPage />} />
               <Route
-                path="tenants/:tenantId/stats"
+                path="/tenants/:tenantId/stats"
                 element={<TenantStatsPage />}
               />
               <Route
-                path="tenants/:tenantId/conversations"
+                path="/tenants/:tenantId/conversations"
                 element={<ConversationsPage />}
               />
             </Route>
