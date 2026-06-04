@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getUsers, deleteUser } from "../../api/tenants";
+import { getUsers, deleteUser, resetUserPassword } from "../../api/tenants";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import {
   Table,
   TableBody,
@@ -10,10 +13,26 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "../../components/ui/dialog";
 import { toast } from "sonner";
 
 export default function UsersPage() {
   const queryClient = useQueryClient();
+
+  const [resetDialog, setResetDialog] = useState<{
+    open: boolean;
+    email: string;
+  }>({
+    open: false,
+    email: "",
+  });
+  const [newPassword, setNewPassword] = useState("");
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["users"],
@@ -26,9 +45,18 @@ export default function UsersPage() {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("Usuario eliminado correctamente.");
     },
-    onError: () => {
-      toast.error("Error al eliminar el usuario.");
+    onError: () => toast.error("Error al eliminar el usuario."),
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      resetUserPassword(email, password),
+    onSuccess: () => {
+      setResetDialog({ open: false, email: "" });
+      setNewPassword("");
+      toast.success("Contraseña reseteada correctamente.");
     },
+    onError: () => toast.error("Error al resetear la contraseña."),
   });
 
   const handleDelete = (email: string) => {
@@ -39,6 +67,17 @@ export default function UsersPage() {
     ) {
       deleteMutation.mutate(email);
     }
+  };
+
+  const handleResetPassword = () => {
+    if (newPassword.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+    resetPasswordMutation.mutate({
+      email: resetDialog.email,
+      password: newPassword,
+    });
   };
 
   return (
@@ -85,7 +124,17 @@ export default function UsersPage() {
                   <TableCell className="text-gray-500 text-sm">
                     {new Date(user.createdAtUtc).toLocaleDateString("es-AR")}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setNewPassword("");
+                        setResetDialog({ open: true, email: user.email });
+                      }}
+                    >
+                      Resetear contraseña
+                    </Button>
                     <Button
                       variant="destructive"
                       size="sm"
@@ -101,6 +150,45 @@ export default function UsersPage() {
           </Table>
         </div>
       )}
+
+      <Dialog
+        open={resetDialog.open}
+        onOpenChange={(open) => setResetDialog({ ...resetDialog, open })}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Resetear contraseña de {resetDialog.email}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="new-password">Nueva contraseña</Label>
+              <Input
+                id="new-password"
+                type="password"
+                placeholder="Mínimo 8 caracteres"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setResetDialog({ ...resetDialog, open: false })}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleResetPassword}
+              disabled={resetPasswordMutation.isPending}
+            >
+              {resetPasswordMutation.isPending ? "Reseteando..." : "Resetear"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

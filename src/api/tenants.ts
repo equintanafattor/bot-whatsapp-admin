@@ -179,6 +179,15 @@ export interface DashboardStats {
 }
 
 export const getDashboard = async (): Promise<DashboardStats> => {
-  const { data } = await apiClient.get<DashboardStats>('/dashboard');
+  const { data } = await apiClient.get<DashboardStats>("/dashboard");
   return data;
+};
+
+export const resetUserPassword = async (
+  email: string,
+  newPassword: string,
+): Promise<void> => {
+  await apiClient.post(`/users/${encodeURIComponent(email)}/reset-password`, {
+    newPassword,
+  });
 };
