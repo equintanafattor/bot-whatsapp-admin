@@ -179,6 +179,6 @@ export interface DashboardStats {
 }
 
 export const getDashboard = async (): Promise<DashboardStats> => {
-  const { data } = await apiClient.get<DashboardStats>("/tenants/dashboard");
+  const { data } = await apiClient.get<DashboardStats>('/dashboard');
   return data;
 };
