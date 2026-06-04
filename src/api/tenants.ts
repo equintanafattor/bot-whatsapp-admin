@@ -201,3 +201,19 @@ export const testWebhook = async (
   );
   return data;
 };
+
+export interface ActivityEvent {
+  type: "message" | "lead" | "handoff" | "error";
+  description: string;
+  createdAtUtc: string;
+}
+
+export const getTenantActivity = async (
+  tenantId: string,
+  hours = 24,
+): Promise<ActivityEvent[]> => {
+  const { data } = await apiClient.get<ActivityEvent[]>(
+    `/tenants/${tenantId}/activity?hours=${hours}`,
+  );
+  return data;
+};

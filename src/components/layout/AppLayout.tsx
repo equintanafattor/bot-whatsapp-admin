@@ -46,6 +46,7 @@ export default function AppLayout() {
               {navLink("/", "Tenants", true)}
               {navLink("/users", "Usuarios")}
               {navLink("/change-password", "Cambiar contraseña")}
+              {navLink(`/tenants/${user?.tenantId}/activity`, 'Actividad')}
             </>
           )}
 

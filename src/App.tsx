@@ -11,6 +11,7 @@ import ConversationDetailPage from './pages/tenants/ConversationDetailPage';
 import UsersPage from './pages/users/UsersPage';
 import ChangePasswordPage from './pages/profile/ChangePasswordPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import ActivityPage from './pages/tenants/ActivityPage';
 import { Toaster } from './components/ui/sonner';
 
 const queryClient = new QueryClient({
@@ -55,6 +56,7 @@ export default function App() {
               <Route path="/tenants/:tenantId/conversations" element={<ConversationsPage />} />
               <Route path="/tenants/:tenantId/conversations/:conversationId" element={<ConversationDetailPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/tenants/:tenantId/activity" element={<ActivityPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
