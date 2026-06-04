@@ -165,3 +165,20 @@ export const getTenantHealth = async (
   );
   return data;
 };
+
+export interface DashboardStats {
+  totalTenants: number;
+  totalConversations: number;
+  activeConversations: number;
+  totalLeads: number;
+  last24h: {
+    leads: number;
+    messages: number;
+    tenantsWithErrors: number;
+  };
+}
+
+export const getDashboard = async (): Promise<DashboardStats> => {
+  const { data } = await apiClient.get<DashboardStats>("/tenants/dashboard");
+  return data;
+};

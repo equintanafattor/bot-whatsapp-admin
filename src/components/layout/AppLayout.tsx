@@ -42,6 +42,7 @@ export default function AppLayout() {
         <nav className="flex-1 p-4 space-y-1">
           {isSuperAdmin && (
             <>
+              {navLink("/dashboard", "Dashboard")}
               {navLink("/", "Tenants", true)}
               {navLink("/users", "Usuarios")}
               {navLink("/change-password", "Cambiar contraseña")}
