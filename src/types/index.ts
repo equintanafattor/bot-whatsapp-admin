@@ -1,12 +1,12 @@
 export interface User {
   email: string;
-  role: 'superadmin' | 'tenant';
+  role: "superadmin" | "tenant";
   tenantId?: string;
 }
 
 export interface AuthResponse {
   token: string;
-  role: 'superadmin' | 'tenant';
+  role: "superadmin" | "tenant";
   tenantId?: string;
   email: string;
 }
@@ -16,6 +16,7 @@ export interface TenantConfiguration {
   businessName: string;
   systemPrompt: string;
   webhookUrl?: string;
+  monthlyMessageLimit?: number;
   createdAtUtc: string;
   updatedAtUtc: string;
 }
@@ -37,4 +38,5 @@ export interface UpsertTenantRequest {
   businessName: string;
   systemPrompt: string;
   webhookUrl?: string;
+  monthlyMessageLimit?: number;
 }

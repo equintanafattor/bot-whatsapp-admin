@@ -16,29 +16,23 @@ import { toast } from "sonner";
 import { testWebhook } from "../../api/tenants";
 
 export default function TenantFormPage() {
-  // const { tenantId } = useParams<{ tenantId: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isSuperAdmin } = useAuth();
-
-  // const isNew = tenantId === "new";
-
   const { tenantId } = useParams<{ tenantId: string }>();
-  console.log("tenantId:", tenantId);
   const isNew = !tenantId || tenantId === "new";
-  console.log("isNew:", isNew);
 
   const { data: tenant, isLoading } = useQuery({
     queryKey: ["tenant", tenantId],
     queryFn: () => getTenant(tenantId!),
     enabled: !isNew && !!tenantId,
   });
-
   const [form, setForm] = useState({
     tenantId: "",
     businessName: "",
     systemPrompt: "",
     webhookUrl: "",
+    monthlyMessageLimit: "",
   });
 
   useEffect(() => {
@@ -48,6 +42,7 @@ export default function TenantFormPage() {
         businessName: tenant.businessName,
         systemPrompt: tenant.systemPrompt,
         webhookUrl: tenant.webhookUrl || "",
+        monthlyMessageLimit: tenant.monthlyMessageLimit?.toString() ?? "",
       });
     }
   }, [tenant]);
@@ -81,6 +76,9 @@ export default function TenantFormPage() {
     mutation.mutate({
       ...form,
       webhookUrl: form.webhookUrl || undefined,
+      monthlyMessageLimit: form.monthlyMessageLimit
+        ? parseInt(form.monthlyMessageLimit)
+        : undefined,
     });
   };
 
@@ -171,6 +169,25 @@ export default function TenantFormPage() {
               </div>
               <p className="text-xs text-gray-500">
                 URL donde se enviarán los leads generados por el bot.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="monthlyMessageLimit">
+                Límite mensual de mensajes (opcional)
+              </Label>
+              <Input
+                id="monthlyMessageLimit"
+                type="number"
+                placeholder="Sin límite"
+                value={form.monthlyMessageLimit}
+                onChange={(e) =>
+                  setForm({ ...form, monthlyMessageLimit: e.target.value })
+                }
+              />
+              <p className="text-xs text-gray-500">
+                Si se supera este límite el bot deja de responder hasta el
+                próximo mes.
               </p>
             </div>
 
