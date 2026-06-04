@@ -191,3 +191,13 @@ export const resetUserPassword = async (
     newPassword,
   });
 };
+
+export const testWebhook = async (
+  webhookUrl: string,
+): Promise<{ success: boolean; status: number }> => {
+  const { data } = await apiClient.post<{ success: boolean; status: number }>(
+    "/tenants/test-webhook",
+    { webhookUrl },
+  );
+  return data;
+};

@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { toast } from "sonner";
+import { testWebhook } from "../../api/tenants";
 
 export default function TenantFormPage() {
   // const { tenantId } = useParams<{ tenantId: string }>();
@@ -24,7 +25,7 @@ export default function TenantFormPage() {
 
   const { tenantId } = useParams<{ tenantId: string }>();
   console.log("tenantId:", tenantId);
-  const isNew = !tenantId || tenantId === 'new';
+  const isNew = !tenantId || tenantId === "new";
   console.log("isNew:", isNew);
 
   const { data: tenant, isLoading } = useQuery({
@@ -61,6 +62,18 @@ export default function TenantFormPage() {
     onError: () => {
       toast.error("Error al guardar. Verificá los datos e intentá de nuevo.");
     },
+  });
+
+  const testWebhookMutation = useMutation({
+    mutationFn: () => testWebhook(form.webhookUrl),
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(`Webhook respondió correctamente (${data.status})`);
+      } else {
+        toast.error(`Webhook falló con status ${data.status}`);
+      }
+    },
+    onError: () => toast.error("No se pudo conectar al webhook."),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -137,15 +150,25 @@ export default function TenantFormPage() {
 
             <div className="space-y-2">
               <Label htmlFor="webhookUrl">Webhook URL (opcional)</Label>
-              <Input
-                id="webhookUrl"
-                type="url"
-                placeholder="https://..."
-                value={form.webhookUrl}
-                onChange={(e) =>
-                  setForm({ ...form, webhookUrl: e.target.value })
-                }
-              />
+              <div className="flex gap-2">
+                <Input
+                  id="webhookUrl"
+                  type="url"
+                  placeholder="https://..."
+                  value={form.webhookUrl}
+                  onChange={(e) =>
+                    setForm({ ...form, webhookUrl: e.target.value })
+                  }
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!form.webhookUrl || testWebhookMutation.isPending}
+                  onClick={() => testWebhookMutation.mutate()}
+                >
+                  {testWebhookMutation.isPending ? "Probando..." : "Probar"}
+                </Button>
+              </div>
               <p className="text-xs text-gray-500">
                 URL donde se enviarán los leads generados por el bot.
               </p>
