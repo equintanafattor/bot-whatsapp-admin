@@ -73,7 +73,20 @@ export default function LeadsPage() {
                     </TableCell>
                     <TableCell>{lead.context.customerName ?? "—"}</TableCell>
                     <TableCell>{lead.context.selectedService ?? "—"}</TableCell>
-                    <TableCell className="text-sm text-gray-500 max-w-xs truncate">
+                    <TableCell
+                      className="text-sm text-gray-500 max-w-xs truncate"
+                      title={
+                        lead.context.extra &&
+                        Object.keys(lead.context.extra).length > 0
+                          ? Object.entries(lead.context.extra)
+                              .map(
+                                ([k, v]) =>
+                                  `${k}: ${typeof v === "object" ? JSON.stringify(v) : v}`,
+                              )
+                              .join(" | ")
+                          : "—"
+                      }
+                    >
                       {lead.context.extra &&
                       Object.keys(lead.context.extra).length > 0
                         ? Object.entries(lead.context.extra)
