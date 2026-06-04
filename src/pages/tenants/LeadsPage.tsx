@@ -77,7 +77,10 @@ export default function LeadsPage() {
                       {lead.context.extra &&
                       Object.keys(lead.context.extra).length > 0
                         ? Object.entries(lead.context.extra)
-                            .map(([k, v]) => `${k}: ${v}`)
+                            .map(
+                              ([k, v]) =>
+                                `${k}: ${typeof v === "object" ? JSON.stringify(v) : v}`,
+                            )
                             .join(" | ")
                         : "—"}
                     </TableCell>
