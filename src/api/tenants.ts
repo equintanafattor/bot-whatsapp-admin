@@ -248,3 +248,21 @@ export const getTenantLeads = async (
   );
   return data;
 };
+
+export interface PreviewResponse {
+  reply: string;
+  state: string;
+  sessionId: string;
+}
+
+export const previewBot = async (
+  tenantId: string,
+  message: string,
+  sessionId: string,
+): Promise<PreviewResponse> => {
+  const { data } = await apiClient.post<PreviewResponse>(
+    `/tenants/${tenantId}/preview`,
+    { message, sessionId },
+  );
+  return data;
+};

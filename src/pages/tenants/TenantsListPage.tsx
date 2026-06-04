@@ -222,6 +222,15 @@ export default function TenantsListPage() {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() =>
+                        navigate(`/tenants/${tenant.tenantId}/preview`)
+                      }
+                    >
+                      Preview
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleOpenUserDialog(tenant.tenantId)}
                     >
                       + Usuario

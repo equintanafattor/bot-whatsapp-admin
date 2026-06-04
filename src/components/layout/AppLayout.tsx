@@ -48,18 +48,20 @@ export default function AppLayout() {
               {navLink("/change-password", "Cambiar contraseña")}
               {navLink(`/tenants/${user?.tenantId}/activity`, 'Actividad')}
               {navLink(`/tenants/${user?.tenantId}/leads`, 'Leads')}
+              {navLink(`/tenants/${user?.tenantId}/preview`, 'Preview bot')}
             </>
           )}
 
           {!isSuperAdmin && user?.tenantId && (
             <>
-              {navLink(`/tenants/${user.tenantId}`, "Mi configuración")}
-              {navLink(`/tenants/${user.tenantId}/stats`, "Métricas")}
+              {navLink(`/tenants/${user?.tenantId}`, "Mi configuración")}
+              {navLink(`/tenants/${user?.tenantId}/stats`, "Métricas")}
               {navLink(
-                `/tenants/${user.tenantId}/conversations`,
+                `/tenants/${user?.tenantId}/conversations`,
                 "Conversaciones",
               )}
               {navLink("/change-password", "Cambiar contraseña")}
+              {navLink(`/tenants/${user?.tenantId}/preview`, 'Preview bot')}
             </>
           )}
         </nav>
