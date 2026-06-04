@@ -217,3 +217,34 @@ export const getTenantActivity = async (
   );
   return data;
 };
+
+export interface LeadRecord {
+  id: string;
+  phoneNumber: string;
+  context: {
+    customerName?: string;
+    selectedService?: string;
+    notes?: string;
+    extra?: Record<string, unknown>;
+  };
+  createdAtUtc: string;
+  completedAtUtc: string;
+}
+
+export interface LeadsResponse {
+  leads: LeadRecord[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export const getTenantLeads = async (
+  tenantId: string,
+  page = 1,
+  pageSize = 20,
+): Promise<LeadsResponse> => {
+  const { data } = await apiClient.get<LeadsResponse>(
+    `/tenants/${tenantId}/leads?page=${page}&pageSize=${pageSize}`,
+  );
+  return data;
+};

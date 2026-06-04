@@ -206,6 +206,15 @@ export default function TenantsListPage() {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() =>
+                        navigate(`/tenants/${tenant.tenantId}/leads`)
+                      }
+                    >
+                      Leads
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => navigate(`/tenants/${tenant.tenantId}`)}
                     >
                       Editar
