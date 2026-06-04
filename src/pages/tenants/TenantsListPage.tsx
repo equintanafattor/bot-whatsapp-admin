@@ -22,6 +22,28 @@ import {
   DialogFooter,
 } from "../../components/ui/dialog";
 import { toast } from "sonner";
+import { getTenantHealth } from "../../api/tenants";
+
+function HealthIndicator({ tenantId }: { tenantId: string }) {
+  const { data, isLoading } = useQuery({
+    queryKey: ["health", tenantId],
+    queryFn: () => getTenantHealth(tenantId),
+    refetchInterval: 60_000, // refresca cada minuto
+  });
+
+  if (isLoading) return <span className="text-gray-400 text-xs">...</span>;
+
+  return (
+    <div className="flex items-center gap-1">
+      <div
+        className={`w-2 h-2 rounded-full ${data?.status === "healthy" ? "bg-green-500" : "bg-red-500"}`}
+      />
+      <span className="text-xs text-gray-500">
+        {data?.status === "healthy" ? "OK" : `${data?.errorsLast24h} errores`}
+      </span>
+    </div>
+  );
+}
 
 export default function TenantsListPage() {
   const navigate = useNavigate();
@@ -127,6 +149,7 @@ export default function TenantsListPage() {
                 <TableHead>Negocio</TableHead>
                 <TableHead>Webhook</TableHead>
                 <TableHead>Creado</TableHead>
+                <TableHead>Estado</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -148,6 +171,9 @@ export default function TenantsListPage() {
                   </TableCell>
                   <TableCell className="text-gray-500 text-sm">
                     {new Date(tenant.createdAtUtc).toLocaleDateString("es-AR")}
+                  </TableCell>
+                  <TableCell>
+                    <HealthIndicator tenantId={tenant.tenantId} />
                   </TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button

@@ -143,3 +143,25 @@ export const getConversationDetail = async (
   );
   return data;
 };
+
+export interface HealthEvent {
+  type: string;
+  message: string;
+  createdAtUtc: string;
+}
+
+export interface TenantHealth {
+  tenantId: string;
+  status: "healthy" | "degraded";
+  errorsLast24h: number;
+  recentErrors: HealthEvent[];
+}
+
+export const getTenantHealth = async (
+  tenantId: string,
+): Promise<TenantHealth> => {
+  const { data } = await apiClient.get<TenantHealth>(
+    `/tenants/${tenantId}/health`,
+  );
+  return data;
+};
