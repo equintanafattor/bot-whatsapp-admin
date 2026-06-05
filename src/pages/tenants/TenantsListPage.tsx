@@ -180,6 +180,15 @@ export default function TenantsListPage() {
                       variant="outline"
                       size="sm"
                       onClick={() =>
+                        navigate(`/tenants/${tenant.tenantId}/tools`)
+                      }
+                    >
+                      Herramientas
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
                         navigate(`/tenants/${tenant.tenantId}/conversations`)
                       }
                     >

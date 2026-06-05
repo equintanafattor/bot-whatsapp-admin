@@ -14,6 +14,7 @@ import DashboardPage from './pages/dashboard/DashboardPage';
 import ActivityPage from './pages/tenants/ActivityPage';
 import LeadsPage from './pages/tenants/LeadsPage';
 import BotPreviewPage from './pages/tenants/BotPreviewPage';
+import ToolsPage from './pages/tenants/ToolsPage';
 import { Toaster } from './components/ui/sonner';
 
 const queryClient = new QueryClient({
@@ -61,6 +62,7 @@ export default function App() {
               <Route path="/tenants/:tenantId/activity" element={<ActivityPage />} />
               <Route path="/tenants/:tenantId/leads" element={<LeadsPage />} />
               <Route path="/tenants/:tenantId/preview" element={<BotPreviewPage />} />
+              <Route path="/tenants/:tenantId/tools" element={<ToolsPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

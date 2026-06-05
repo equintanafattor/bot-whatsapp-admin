@@ -49,6 +49,7 @@ export default function AppLayout() {
               {navLink(`/tenants/${user?.tenantId}/activity`, 'Actividad')}
               {navLink(`/tenants/${user?.tenantId}/leads`, 'Leads')}
               {navLink(`/tenants/${user?.tenantId}/preview`, 'Preview bot')}
+              {navLink(`/tenants/${user?.tenantId}/tools`, 'Herramientas')}
             </>
           )}
 

@@ -270,10 +270,51 @@ export const previewBot = async (
 export const replyToConversation = async (
   tenantId: string,
   conversationId: string,
-  message: string
+  message: string,
 ): Promise<void> => {
   await apiClient.post(
     `/tenants/${tenantId}/conversations/${conversationId}/reply`,
-    { message }
+    { message },
   );
+};
+
+export interface TenantTool {
+  id: string;
+  tenantId: string;
+  name: string;
+  description: string;
+  inputSchema: string;
+  webhookUrl: string;
+  isActive: boolean;
+  createdAtUtc: string;
+}
+
+export interface UpsertToolRequest {
+  name: string;
+  description: string;
+  inputSchema: string;
+  webhookUrl: string;
+}
+
+export const getTenantTools = async (
+  tenantId: string,
+): Promise<TenantTool[]> => {
+  const { data } = await apiClient.get<TenantTool[]>(
+    `/tenants/${tenantId}/tools`,
+  );
+  return data;
+};
+
+export const createTenantTool = async (
+  tenantId: string,
+  request: UpsertToolRequest,
+): Promise<void> => {
+  await apiClient.post(`/tenants/${tenantId}/tools`, request);
+};
+
+export const deleteTenantTool = async (
+  tenantId: string,
+  toolId: string,
+): Promise<void> => {
+  await apiClient.delete(`/tenants/${tenantId}/tools/${toolId}`);
 };
