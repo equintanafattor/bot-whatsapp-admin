@@ -1,8 +1,15 @@
+import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getConversationDetail } from "../../api/tenants";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getConversationDetail,
+  getTenant,
+  replyToConversation,
+} from "../../api/tenants";
 import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
+import { toast } from "sonner";
 
 const STATE_LABELS: Record<
   string,
@@ -22,12 +29,53 @@ export default function ConversationDetailPage() {
     conversationId: string;
   }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [replyText, setReplyText] = useState("");
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const { data: tenant } = useQuery({
+    queryKey: ["tenant", tenantId],
+    queryFn: () => getTenant(tenantId!),
+    enabled: !!tenantId,
+  });
 
   const { data: conversation, isLoading } = useQuery({
     queryKey: ["conversation", tenantId, conversationId],
     queryFn: () => getConversationDetail(tenantId!, conversationId!),
     enabled: !!tenantId && !!conversationId,
+    // Polling cada 5 segundos si la conversación está derivada a humano
+    refetchInterval: (query) =>
+      query.state.data?.state === "handed_to_human" ? 5000 : false,
   });
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [conversation?.messages]);
+
+  const replyMutation = useMutation({
+    mutationFn: (message: string) =>
+      replyToConversation(tenantId!, conversationId!, message),
+    onSuccess: () => {
+      setReplyText("");
+      queryClient.invalidateQueries({
+        queryKey: ["conversation", tenantId, conversationId],
+      });
+      toast.success("Mensaje enviado.");
+    },
+    onError: () => toast.error("Error al enviar el mensaje."),
+  });
+
+  const handleSend = () => {
+    if (!replyText.trim() || replyMutation.isPending) return;
+    replyMutation.mutate(replyText.trim());
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   const stateInfo = conversation
     ? (STATE_LABELS[conversation.state] ?? {
@@ -35,6 +83,8 @@ export default function ConversationDetailPage() {
         variant: "outline" as const,
       })
     : null;
+
+  const isHandedToHuman = conversation?.state === "handed_to_human";
 
   return (
     <div className="p-8 max-w-2xl">
@@ -60,34 +110,61 @@ export default function ConversationDetailPage() {
       ) : !conversation || conversation.messages.length === 0 ? (
         <p className="text-gray-500">No hay mensajes en esta conversación.</p>
       ) : (
-        <div className="space-y-3">
-          {conversation.messages.map((msg) => {
-            const isInbound = msg.direction === "inbound";
-            return (
-              <div
-                key={msg.id}
-                className={`flex ${isInbound ? "justify-start" : "justify-end"}`}
-              >
+        <div className="flex flex-col gap-3">
+          {/* Mensajes */}
+          <div className="space-y-3 max-h-[500px] overflow-y-auto">
+            {conversation.messages.map((msg) => {
+              const isInbound = msg.direction === "inbound";
+              return (
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm ${
-                    isInbound
-                      ? "bg-white border text-gray-900 rounded-tl-none"
-                      : "bg-gray-900 text-white rounded-tr-none"
-                  }`}
+                  key={msg.id}
+                  className={`flex ${isInbound ? "justify-start" : "justify-end"}`}
                 >
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
-                  <p
-                    className={`text-xs mt-1 ${isInbound ? "text-gray-400" : "text-gray-400"}`}
+                  <div
+                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm ${
+                      isInbound
+                        ? "bg-white border text-gray-900 rounded-tl-none"
+                        : "bg-gray-900 text-white rounded-tr-none"
+                    }`}
                   >
-                    {new Date(msg.createdAtUtc).toLocaleTimeString("es-AR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
+                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                    <p className="text-xs mt-1 opacity-60">
+                      {new Date(msg.createdAtUtc).toLocaleTimeString("es-AR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
                 </div>
+              );
+            })}
+            <div ref={bottomRef} />
+          </div>
+
+          {/* Input de respuesta — solo si está derivada a humano */}
+          {isHandedToHuman && (
+            <div className="border-t pt-4">
+              <p className="text-xs text-gray-500 mb-2">
+                📱 Respondé como si fueras el negocio — el mensaje le llegará
+                por WhatsApp
+              </p>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Escribí tu respuesta..."
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={replyMutation.isPending}
+                />
+                <Button
+                  onClick={handleSend}
+                  disabled={!replyText.trim() || replyMutation.isPending}
+                >
+                  {replyMutation.isPending ? "Enviando..." : "Enviar"}
+                </Button>
               </div>
-            );
-          })}
+            </div>
+          )}
         </div>
       )}
 

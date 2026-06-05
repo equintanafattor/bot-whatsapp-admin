@@ -266,3 +266,14 @@ export const previewBot = async (
   );
   return data;
 };
+
+export const replyToConversation = async (
+  tenantId: string,
+  conversationId: string,
+  message: string
+): Promise<void> => {
+  await apiClient.post(
+    `/tenants/${tenantId}/conversations/${conversationId}/reply`,
+    { message }
+  );
+};
