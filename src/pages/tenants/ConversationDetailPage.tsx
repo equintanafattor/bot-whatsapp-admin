@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getConversationDetail,
-  getTenant,
   replyToConversation,
 } from "../../api/tenants";
 import { Button } from "../../components/ui/button";
@@ -32,13 +31,6 @@ export default function ConversationDetailPage() {
   const queryClient = useQueryClient();
   const [replyText, setReplyText] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
-
-  const { data: tenant } = useQuery({
-    queryKey: ["tenant", tenantId],
-    queryFn: () => getTenant(tenantId!),
-    enabled: !!tenantId,
-  });
-
   const { data: conversation, isLoading } = useQuery({
     queryKey: ["conversation", tenantId, conversationId],
     queryFn: () => getConversationDetail(tenantId!, conversationId!),
