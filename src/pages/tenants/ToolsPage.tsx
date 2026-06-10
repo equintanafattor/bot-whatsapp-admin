@@ -11,9 +11,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Card, CardContent } from "../../components/ui/card";
-import {
-  Dialog,
-} from "../../components/ui/dialog";
+import { Dialog } from "../../components/ui/dialog";
 import { toast } from "sonner";
 import {
   Sheet,
@@ -172,11 +170,11 @@ export default function ToolsPage() {
       {/* Dialog para crear herramienta */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <Sheet open={showForm} onOpenChange={setShowForm}>
-          <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
-            <SheetHeader>
+          <SheetContent className="w-full sm:max-w-lg overflow-y-auto flex flex-col p-0">
+            <SheetHeader className="px-6 pt-6 pb-4 border-b">
               <SheetTitle>Nueva herramienta</SheetTitle>
             </SheetHeader>
-            <div className="space-y-4 py-4">
+            <div className="space-y-4 px-6 py-4 flex-1 overflow-y-auto">
               <div className="space-y-2">
                 <Label htmlFor="tool-name">Nombre (snake_case)</Label>
                 <Input
@@ -239,7 +237,7 @@ export default function ToolsPage() {
                 </p>
               </div>
             </div>
-            <SheetFooter>
+            <SheetFooter className="px-6 py-4 border-t">
               <Button variant="outline" onClick={() => setShowForm(false)}>
                 Cancelar
               </Button>
