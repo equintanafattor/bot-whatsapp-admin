@@ -13,10 +13,6 @@ import { Label } from "../../components/ui/label";
 import { Card, CardContent } from "../../components/ui/card";
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
 } from "../../components/ui/dialog";
 import { toast } from "sonner";
 import {
