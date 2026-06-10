@@ -10,10 +10,7 @@ import {
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import {
-  Card,
-  CardContent,
-} from "../../components/ui/card";
+import { Card, CardContent } from "../../components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -171,11 +168,11 @@ export default function ToolsPage() {
 
       {/* Dialog para crear herramienta */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl flex flex-col max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Nueva herramienta</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-2 overflow-y-auto flex-1">
             <div className="space-y-2">
               <Label htmlFor="tool-name">Nombre (snake_case)</Label>
               <Input
@@ -238,7 +235,7 @@ export default function ToolsPage() {
               </p>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="border-t pt-4">
             <Button variant="outline" onClick={() => setShowForm(false)}>
               Cancelar
             </Button>
