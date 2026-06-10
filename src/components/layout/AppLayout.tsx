@@ -1,6 +1,19 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../lib/auth-context";
 import { Button } from "../ui/button";
+import {
+  LayoutDashboard,
+  Building2,
+  Users,
+  KeyRound,
+  MessageSquare,
+  BarChart2,
+  Activity,
+  Wrench,
+  Bot,
+  Trophy,
+  LogOut,
+} from "lucide-react";
 
 export default function AppLayout() {
   const { user, signOut, isSuperAdmin } = useAuth();
@@ -11,18 +24,24 @@ export default function AppLayout() {
     navigate("/login");
   };
 
-  const navLink = (to: string, label: string, end = false) => (
+  const navLink = (
+    to: string,
+    label: string,
+    icon: React.ReactNode,
+    end = false,
+  ) => (
     <NavLink
       to={to}
       end={end}
       className={({ isActive }) =>
-        `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+        `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
           isActive
             ? "bg-gray-100 text-gray-900"
             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
         }`
       }
     >
+      {icon}
       {label}
     </NavLink>
   );
@@ -42,33 +61,74 @@ export default function AppLayout() {
         <nav className="flex-1 p-4 space-y-1">
           {isSuperAdmin && (
             <>
-              {navLink("/dashboard", "Dashboard")}
-              {navLink("/", "Tenants", true)}
-              {navLink("/users", "Usuarios")}
-              {navLink("/change-password", "Cambiar contraseña")}
-              {navLink(`/tenants/${user?.tenantId}/activity`, 'Actividad')}
-              {navLink(`/tenants/${user?.tenantId}/leads`, 'Leads')}
-              {navLink(`/tenants/${user?.tenantId}/preview`, 'Preview bot')}
-              {navLink(`/tenants/${user?.tenantId}/tools`, 'Herramientas')}
+              {navLink(
+                "/dashboard",
+                "Dashboard",
+                <LayoutDashboard size={16} />,
+              )}
+              {navLink("/", "Tenants", <Building2 size={16} />, true)}
+              {navLink("/users", "Usuarios", <Users size={16} />)}
+              {navLink(
+                "/change-password",
+                "Cambiar contraseña",
+                <KeyRound size={16} />,
+              )}
             </>
           )}
 
           {!isSuperAdmin && user?.tenantId && (
             <>
-              {navLink(`/tenants/${user?.tenantId}`, "Mi configuración")}
-              {navLink(`/tenants/${user?.tenantId}/stats`, "Métricas")}
               {navLink(
-                `/tenants/${user?.tenantId}/conversations`,
-                "Conversaciones",
+                `/tenants/${user.tenantId}`,
+                "Mi configuración",
+                <Building2 size={16} />,
               )}
-              {navLink("/change-password", "Cambiar contraseña")}
-              {navLink(`/tenants/${user?.tenantId}/preview`, 'Preview bot')}
+              {navLink(
+                `/tenants/${user.tenantId}/stats`,
+                "Métricas",
+                <BarChart2 size={16} />,
+              )}
+              {navLink(
+                `/tenants/${user.tenantId}/conversations`,
+                "Conversaciones",
+                <MessageSquare size={16} />,
+              )}
+              {navLink(
+                `/tenants/${user.tenantId}/leads`,
+                "Leads",
+                <Trophy size={16} />,
+              )}
+              {navLink(
+                `/tenants/${user.tenantId}/activity`,
+                "Actividad",
+                <Activity size={16} />,
+              )}
+              {navLink(
+                `/tenants/${user.tenantId}/tools`,
+                "Herramientas",
+                <Wrench size={16} />,
+              )}
+              {navLink(
+                `/tenants/${user.tenantId}/preview`,
+                "Preview bot",
+                <Bot size={16} />,
+              )}
+              {navLink(
+                "/change-password",
+                "Cambiar contraseña",
+                <KeyRound size={16} />,
+              )}
             </>
           )}
         </nav>
 
         <div className="p-4 border-t">
-          <Button variant="outline" className="w-full" onClick={handleSignOut}>
+          <Button
+            variant="outline"
+            className="w-full flex items-center gap-2"
+            onClick={handleSignOut}
+          >
+            <LogOut size={16} />
             Cerrar sesión
           </Button>
         </div>
