@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TableSkeleton } from "../../components/ui/table-skeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { getTenants, deleteTenant, createTenantUser } from "../../api/tenants";
@@ -135,9 +136,8 @@ export default function TenantsListPage() {
         </div>
         <Button onClick={() => navigate("/tenants/new")}>+ Nuevo tenant</Button>
       </div>
-
       {isLoading ? (
-        <p className="text-gray-500">Cargando...</p>
+        <TableSkeleton rows={5} columns={5} />
       ) : tenants.length === 0 ? (
         <p className="text-gray-500">No hay tenants registrados aún.</p>
       ) : (

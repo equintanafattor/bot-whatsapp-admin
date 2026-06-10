@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
+import { TableSkeleton } from "@/components/ui/table-skeleton";
 
 export default function LeadsPage() {
   const { tenantId } = useParams<{ tenantId: string }>();
@@ -49,7 +50,7 @@ export default function LeadsPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Cargando...</p>
+        <TableSkeleton rows={5} columns={5} />
       ) : !data || data.leads.length === 0 ? (
         <p className="text-gray-500">No hay leads generados aún.</p>
       ) : (

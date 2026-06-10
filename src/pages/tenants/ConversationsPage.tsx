@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
+import { TableSkeleton } from "@/components/ui/table-skeleton";
 
 const STATE_LABELS: Record<
   string,
@@ -62,7 +63,7 @@ export default function ConversationsPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Cargando...</p>
+        <TableSkeleton rows={5} columns={5} />
       ) : !data || data.conversations.length === 0 ? (
         <p className="text-gray-500">No hay conversaciones aún.</p>
       ) : (

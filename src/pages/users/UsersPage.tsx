@@ -21,6 +21,7 @@ import {
   DialogFooter,
 } from "../../components/ui/dialog";
 import { toast } from "sonner";
+import { TableSkeleton } from "@/components/ui/table-skeleton";
 
 export default function UsersPage() {
   const queryClient = useQueryClient();
@@ -90,7 +91,7 @@ export default function UsersPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Cargando...</p>
+        <TableSkeleton rows={5} columns={5} />
       ) : users.length === 0 ? (
         <p className="text-gray-500">No hay usuarios registrados aún.</p>
       ) : (
