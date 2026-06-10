@@ -168,7 +168,7 @@ export default function ToolsPage() {
 
       {/* Dialog para crear herramienta */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-2xl flex flex-col max-h-[90vh]">
+        <DialogContent className="sm:max-w-2xl flex flex-col max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Nueva herramienta</DialogTitle>
           </DialogHeader>
