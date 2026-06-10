@@ -13,6 +13,8 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
+import { MessageSquare } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const STATE_LABELS: Record<
   string,
@@ -65,7 +67,10 @@ export default function ConversationsPage() {
       {isLoading ? (
         <TableSkeleton rows={5} columns={5} />
       ) : !data || data.conversations.length === 0 ? (
-        <p className="text-gray-500">No hay conversaciones aún.</p>
+        <EmptyState
+          icon={<MessageSquare size={24} />}
+          title="No hay conversaciones aún."
+        />
       ) : (
         <>
           <div className="bg-white rounded-lg border mb-4">

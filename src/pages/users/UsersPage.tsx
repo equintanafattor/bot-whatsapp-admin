@@ -22,6 +22,8 @@ import {
 } from "../../components/ui/dialog";
 import { toast } from "sonner";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
+import { Users } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function UsersPage() {
   const queryClient = useQueryClient();
@@ -93,7 +95,10 @@ export default function UsersPage() {
       {isLoading ? (
         <TableSkeleton rows={5} columns={5} />
       ) : users.length === 0 ? (
-        <p className="text-gray-500">No hay usuarios registrados aún.</p>
+        <EmptyState
+          icon={<Users size={24} />}
+          title="No hay usuarios registrados"
+        />
       ) : (
         <div className="bg-white rounded-lg border">
           <Table>

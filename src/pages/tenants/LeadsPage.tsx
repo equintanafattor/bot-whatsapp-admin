@@ -12,6 +12,8 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
+import { Trophy } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function LeadsPage() {
   const { tenantId } = useParams<{ tenantId: string }>();
@@ -52,7 +54,10 @@ export default function LeadsPage() {
       {isLoading ? (
         <TableSkeleton rows={5} columns={5} />
       ) : !data || data.leads.length === 0 ? (
-        <p className="text-gray-500">No hay leads generados aún.</p>
+        <EmptyState
+          icon={<Trophy size={24} />}
+          title="No hay leads generados"
+        />
       ) : (
         <>
           <div className="bg-white rounded-lg border mb-4">

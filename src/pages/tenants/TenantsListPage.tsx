@@ -23,6 +23,8 @@ import {
   DialogFooter,
 } from "../../components/ui/dialog";
 import { toast } from "sonner";
+import { EmptyState } from "../../components/ui/empty-state";
+import { Building2 } from "lucide-react";
 import { getTenantHealth } from "../../api/tenants";
 
 function HealthIndicator({ tenantId }: { tenantId: string }) {
@@ -139,7 +141,11 @@ export default function TenantsListPage() {
       {isLoading ? (
         <TableSkeleton rows={5} columns={5} />
       ) : tenants.length === 0 ? (
-        <p className="text-gray-500">No hay tenants registrados aún.</p>
+        <EmptyState
+          icon={<Building2 size={24} />}
+          title="No hay tenants registrados"
+          description="Creá tu primer negocio para empezar a usar el bot."
+        />
       ) : (
         <div className="bg-white rounded-lg border">
           <Table>

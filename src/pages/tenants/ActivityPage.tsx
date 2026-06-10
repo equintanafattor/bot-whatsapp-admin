@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getTenantActivity, getTenant } from "../../api/tenants";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
+import { EmptyState } from "../../components/ui/empty-state";
+import { Activity } from "lucide-react";
 
 const EVENT_CONFIG = {
   message: {
@@ -79,7 +81,11 @@ export default function ActivityPage() {
       {isLoading ? (
         <p className="text-gray-500">Cargando...</p>
       ) : events.length === 0 ? (
-        <p className="text-gray-500">No hay actividad en este período.</p>
+        <EmptyState
+          icon={<Activity size={24} />}
+          title="No hay actividad en este período"
+          description="Cuando lleguen mensajes o se generen leads aparecerán aquí."
+        />
       ) : (
         <div className="space-y-2">
           {events.map((event, index) => {
