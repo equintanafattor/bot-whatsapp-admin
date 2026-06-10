@@ -19,6 +19,13 @@ import {
   DialogFooter,
 } from "../../components/ui/dialog";
 import { toast } from "sonner";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "../../components/ui/sheet";
 
 const DEFAULT_SCHEMA = JSON.stringify(
   {
@@ -168,82 +175,87 @@ export default function ToolsPage() {
 
       {/* Dialog para crear herramienta */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="sm:max-w-2xl flex flex-col max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Nueva herramienta</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2 overflow-y-auto flex-1">
-            <div className="space-y-2">
-              <Label htmlFor="tool-name">Nombre (snake_case)</Label>
-              <Input
-                id="tool-name"
-                placeholder="consultar_turnos_disponibles"
-                value={form.name}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    name: e.target.value.toLowerCase().replace(/\s/g, "_"),
-                  })
-                }
-              />
-              <p className="text-xs text-gray-500">
-                Solo letras minúsculas, números y guiones bajos.
-              </p>
+        <Sheet open={showForm} onOpenChange={setShowForm}>
+          <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Nueva herramienta</SheetTitle>
+            </SheetHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="tool-name">Nombre (snake_case)</Label>
+                <Input
+                  id="tool-name"
+                  placeholder="consultar_turnos_disponibles"
+                  value={form.name}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      name: e.target.value.toLowerCase().replace(/\s/g, "_"),
+                    })
+                  }
+                />
+                <p className="text-xs text-gray-500">
+                  Solo letras minúsculas, números y guiones bajos.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tool-desc">Descripción</Label>
+                <Input
+                  id="tool-desc"
+                  placeholder="Consulta los turnos disponibles para una fecha dada"
+                  value={form.description}
+                  onChange={(e) =>
+                    setForm({ ...form, description: e.target.value })
+                  }
+                />
+                <p className="text-xs text-gray-500">
+                  Claude usa esta descripción para decidir cuándo invocar la
+                  herramienta.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tool-schema">Input Schema (JSON)</Label>
+                <textarea
+                  id="tool-schema"
+                  className="w-full h-36 px-3 py-2 border rounded-md text-sm font-mono resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+                  value={form.inputSchema}
+                  onChange={(e) =>
+                    setForm({ ...form, inputSchema: e.target.value })
+                  }
+                />
+                <p className="text-xs text-gray-500">
+                  JSON Schema de los parámetros que acepta la herramienta.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tool-webhook">Webhook URL</Label>
+                <Input
+                  id="tool-webhook"
+                  type="url"
+                  placeholder="https://n8n.tudominio.com/webhook/consultar-turnos"
+                  value={form.webhookUrl}
+                  onChange={(e) =>
+                    setForm({ ...form, webhookUrl: e.target.value })
+                  }
+                />
+                <p className="text-xs text-gray-500">
+                  URL que recibe los parámetros y devuelve el resultado.
+                </p>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="tool-desc">Descripción</Label>
-              <Input
-                id="tool-desc"
-                placeholder="Consulta los turnos disponibles para una fecha dada"
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-              />
-              <p className="text-xs text-gray-500">
-                Claude usa esta descripción para decidir cuándo invocar la
-                herramienta.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="tool-schema">Input Schema (JSON)</Label>
-              <textarea
-                id="tool-schema"
-                className="w-full h-36 px-3 py-2 border rounded-md text-sm font-mono resize-y focus:outline-none focus:ring-2 focus:ring-ring"
-                value={form.inputSchema}
-                onChange={(e) =>
-                  setForm({ ...form, inputSchema: e.target.value })
-                }
-              />
-              <p className="text-xs text-gray-500">
-                JSON Schema de los parámetros que acepta la herramienta.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="tool-webhook">Webhook URL</Label>
-              <Input
-                id="tool-webhook"
-                type="url"
-                placeholder="https://n8n.tudominio.com/webhook/consultar-turnos"
-                value={form.webhookUrl}
-                onChange={(e) =>
-                  setForm({ ...form, webhookUrl: e.target.value })
-                }
-              />
-              <p className="text-xs text-gray-500">
-                URL que recibe los parámetros y devuelve el resultado.
-              </p>
-            </div>
-          </div>
-          <DialogFooter className="border-t pt-4">
-            <Button variant="outline" onClick={() => setShowForm(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleCreate} disabled={createMutation.isPending}>
-              {createMutation.isPending ? "Creando..." : "Crear herramienta"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+            <SheetFooter>
+              <Button variant="outline" onClick={() => setShowForm(false)}>
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleCreate}
+                disabled={createMutation.isPending}
+              >
+                {createMutation.isPending ? "Creando..." : "Crear herramienta"}
+              </Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
       </Dialog>
     </div>
   );
