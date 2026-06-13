@@ -21,11 +21,27 @@ import {
   SheetHeader,
   SheetTitle,
   SheetFooter,
-} from '../../components/ui/sheet';
+} from "../../components/ui/sheet";
 import { toast } from "sonner";
 import { EmptyState } from "../../components/ui/empty-state";
 import { Building2 } from "lucide-react";
 import { getTenantHealth } from "../../api/tenants";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "../../components/ui/tooltip";
+import {
+  MessageSquare,
+  BarChart2,
+  Trophy,
+  Activity,
+  Wrench,
+  Bot,
+  Pencil,
+  UserPlus,
+  Trash2,
+} from "lucide-react";
 
 function HealthIndicator({ tenantId }: { tenantId: string }) {
   const { data, isLoading } = useQuery({
@@ -129,6 +145,22 @@ export default function TenantsListPage() {
     });
   };
 
+  const iconButton = (
+    icon: React.ReactNode,
+    label: string,
+    onClick: () => void,
+    variant: "outline" | "destructive" = "outline",
+  ) => (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button variant={variant} size="icon-sm" onClick={onClick}>
+          {icon}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  );
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
@@ -181,82 +213,42 @@ export default function TenantsListPage() {
                   <TableCell>
                     <HealthIndicator tenantId={tenant.tenantId} />
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        navigate(`/tenants/${tenant.tenantId}/tools`)
-                      }
-                    >
-                      Herramientas
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        navigate(`/tenants/${tenant.tenantId}/conversations`)
-                      }
-                    >
-                      Conversaciones
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        navigate(`/tenants/${tenant.tenantId}/activity`)
-                      }
-                    >
-                      Actividad
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        navigate(`/tenants/${tenant.tenantId}/stats`)
-                      }
-                    >
-                      Métricas
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        navigate(`/tenants/${tenant.tenantId}/leads`)
-                      }
-                    >
-                      Leads
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/tenants/${tenant.tenantId}`)}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        navigate(`/tenants/${tenant.tenantId}/preview`)
-                      }
-                    >
-                      Preview
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleOpenUserDialog(tenant.tenantId)}
-                    >
-                      + Usuario
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDelete(tenant.tenantId)}
-                    >
-                      Eliminar
-                    </Button>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      {iconButton(
+                        <MessageSquare size={15} />,
+                        "Conversaciones",
+                        () =>
+                          navigate(`/tenants/${tenant.tenantId}/conversations`),
+                      )}
+                      {iconButton(<Trophy size={15} />, "Leads", () =>
+                        navigate(`/tenants/${tenant.tenantId}/leads`),
+                      )}
+                      {iconButton(<Activity size={15} />, "Actividad", () =>
+                        navigate(`/tenants/${tenant.tenantId}/activity`),
+                      )}
+                      {iconButton(<Wrench size={15} />, "Herramientas", () =>
+                        navigate(`/tenants/${tenant.tenantId}/tools`),
+                      )}
+                      {iconButton(<Bot size={15} />, "Preview", () =>
+                        navigate(`/tenants/${tenant.tenantId}/preview`),
+                      )}
+                      {iconButton(<BarChart2 size={15} />, "Métricas", () =>
+                        navigate(`/tenants/${tenant.tenantId}/stats`),
+                      )}
+                      {iconButton(<Pencil size={15} />, "Editar", () =>
+                        navigate(`/tenants/${tenant.tenantId}`),
+                      )}
+                      {iconButton(<UserPlus size={15} />, "Crear usuario", () =>
+                        handleOpenUserDialog(tenant.tenantId),
+                      )}
+                      {iconButton(
+                        <Trash2 size={15} />,
+                        "Eliminar",
+                        () => handleDelete(tenant.tenantId),
+                        "destructive",
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -266,7 +258,10 @@ export default function TenantsListPage() {
       )}
 
       {/* Dialog para crear usuario tenant */}
-      <Sheet open={userDialog.open} onOpenChange={(open) => setUserDialog({ ...userDialog, open })}>
+      <Sheet
+        open={userDialog.open}
+        onOpenChange={(open) => setUserDialog({ ...userDialog, open })}
+      >
         <SheetContent className="w-full sm:max-w-lg flex flex-col p-0">
           <SheetHeader className="px-6 pt-6 pb-4 border-b">
             <SheetTitle>Crear usuario para {userDialog.tenantId}</SheetTitle>
@@ -279,7 +274,9 @@ export default function TenantsListPage() {
                 type="email"
                 placeholder="cliente@negocio.com"
                 value={userForm.email}
-                onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
+                onChange={(e) =>
+                  setUserForm({ ...userForm, email: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -289,17 +286,25 @@ export default function TenantsListPage() {
                 type="password"
                 placeholder="••••••••"
                 value={userForm.password}
-                onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
+                onChange={(e) =>
+                  setUserForm({ ...userForm, password: e.target.value })
+                }
               />
             </div>
             {userError && <p className="text-sm text-red-500">{userError}</p>}
           </div>
           <SheetFooter className="px-6 py-4 border-t">
-            <Button variant="outline" onClick={() => setUserDialog({ ...userDialog, open: false })}>
+            <Button
+              variant="outline"
+              onClick={() => setUserDialog({ ...userDialog, open: false })}
+            >
               Cancelar
             </Button>
-            <Button onClick={handleCreateUser} disabled={createUserMutation.isPending}>
-              {createUserMutation.isPending ? 'Creando...' : 'Crear usuario'}
+            <Button
+              onClick={handleCreateUser}
+              disabled={createUserMutation.isPending}
+            >
+              {createUserMutation.isPending ? "Creando..." : "Crear usuario"}
             </Button>
           </SheetFooter>
         </SheetContent>
