@@ -32,7 +32,13 @@ export function Breadcrumbs() {
 
   // Construir los crumbs acumulando el path
   const crumbs = segments.map((segment, index) => {
-    const path = "/" + segments.slice(0, index + 1).join("/");
+    let path = "/" + segments.slice(0, index + 1).join("/");
+
+    // El segmento "tenants" solo lleva a la home (lista de tenants)
+    if (segment === "tenants" && index === 0) {
+      path = "/";
+    }
+
     const isTenantId = segment === params.tenantId;
     const isConversationId = segment === params.conversationId;
 
