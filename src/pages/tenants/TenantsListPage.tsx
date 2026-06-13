@@ -16,12 +16,12 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "../../components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from '../../components/ui/sheet';
 import { toast } from "sonner";
 import { EmptyState } from "../../components/ui/empty-state";
 import { Building2 } from "lucide-react";
@@ -266,15 +266,12 @@ export default function TenantsListPage() {
       )}
 
       {/* Dialog para crear usuario tenant */}
-      <Dialog
-        open={userDialog.open}
-        onOpenChange={(open) => setUserDialog({ ...userDialog, open })}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Crear usuario para {userDialog.tenantId}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
+      <Sheet open={userDialog.open} onOpenChange={(open) => setUserDialog({ ...userDialog, open })}>
+        <SheetContent className="w-full sm:max-w-lg flex flex-col p-0">
+          <SheetHeader className="px-6 pt-6 pb-4 border-b">
+            <SheetTitle>Crear usuario para {userDialog.tenantId}</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-4 px-6 py-4 flex-1 overflow-y-auto">
             <div className="space-y-2">
               <Label htmlFor="user-email">Email</Label>
               <Input
@@ -282,9 +279,7 @@ export default function TenantsListPage() {
                 type="email"
                 placeholder="cliente@negocio.com"
                 value={userForm.email}
-                onChange={(e) =>
-                  setUserForm({ ...userForm, email: e.target.value })
-                }
+                onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
               />
             </div>
             <div className="space-y-2">
@@ -294,29 +289,21 @@ export default function TenantsListPage() {
                 type="password"
                 placeholder="••••••••"
                 value={userForm.password}
-                onChange={(e) =>
-                  setUserForm({ ...userForm, password: e.target.value })
-                }
+                onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
               />
             </div>
             {userError && <p className="text-sm text-red-500">{userError}</p>}
           </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setUserDialog({ ...userDialog, open: false })}
-            >
+          <SheetFooter className="px-6 py-4 border-t">
+            <Button variant="outline" onClick={() => setUserDialog({ ...userDialog, open: false })}>
               Cancelar
             </Button>
-            <Button
-              onClick={handleCreateUser}
-              disabled={createUserMutation.isPending}
-            >
-              {createUserMutation.isPending ? "Creando..." : "Crear usuario"}
+            <Button onClick={handleCreateUser} disabled={createUserMutation.isPending}>
+              {createUserMutation.isPending ? 'Creando...' : 'Crear usuario'}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

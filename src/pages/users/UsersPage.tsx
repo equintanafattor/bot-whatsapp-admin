@@ -14,12 +14,12 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "../../components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from '../../components/ui/sheet';
 import { toast } from "sonner";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import { Users } from "lucide-react";
@@ -157,17 +157,12 @@ export default function UsersPage() {
         </div>
       )}
 
-      <Dialog
-        open={resetDialog.open}
-        onOpenChange={(open) => setResetDialog({ ...resetDialog, open })}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              Resetear contraseña de {resetDialog.email}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
+      <Sheet open={resetDialog.open} onOpenChange={(open) => setResetDialog({ ...resetDialog, open })}>
+        <SheetContent className="w-full sm:max-w-lg flex flex-col p-0">
+          <SheetHeader className="px-6 pt-6 pb-4 border-b">
+            <SheetTitle>Resetear contraseña de {resetDialog.email}</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-4 px-6 py-4 flex-1 overflow-y-auto">
             <div className="space-y-2">
               <Label htmlFor="new-password">Nueva contraseña</Label>
               <Input
@@ -179,22 +174,16 @@ export default function UsersPage() {
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setResetDialog({ ...resetDialog, open: false })}
-            >
+          <SheetFooter className="px-6 py-4 border-t">
+            <Button variant="outline" onClick={() => setResetDialog({ ...resetDialog, open: false })}>
               Cancelar
             </Button>
-            <Button
-              onClick={handleResetPassword}
-              disabled={resetPasswordMutation.isPending}
-            >
-              {resetPasswordMutation.isPending ? "Reseteando..." : "Resetear"}
+            <Button onClick={handleResetPassword} disabled={resetPasswordMutation.isPending}>
+              {resetPasswordMutation.isPending ? 'Reseteando...' : 'Resetear'}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
