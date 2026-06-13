@@ -14,6 +14,7 @@ import {
   Trophy,
   LogOut,
 } from "lucide-react";
+import { Breadcrumbs } from "./Breadcrumbs";
 
 export default function AppLayout() {
   const { user, signOut, isSuperAdmin } = useAuth();
@@ -136,6 +137,9 @@ export default function AppLayout() {
 
       {/* Main content */}
       <main className="flex-1 overflow-auto">
+        <div className="px-8 pt-6">
+          <Breadcrumbs />
+        </div>
         <Outlet />
       </main>
     </div>
