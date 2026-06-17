@@ -83,12 +83,12 @@ export default function TenantFormPage() {
   };
 
   if (!isNew && isLoading)
-    return <p className="p-8 text-gray-500">Cargando...</p>;
+    return <p className="p-8 text-muted-foreground">Cargando...</p>;
 
   return (
     <div className="p-8 max-w-2xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-foreground">
           {isNew ? "Nuevo tenant" : `Editar: ${tenant?.businessName}`}
         </h1>
       </div>
@@ -112,7 +112,7 @@ export default function TenantFormPage() {
                   disabled={!isNew}
                   required
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Solo letras minúsculas, números y guiones. No se puede cambiar
                   después.
                 </p>
@@ -167,7 +167,7 @@ export default function TenantFormPage() {
                   {testWebhookMutation.isPending ? "Probando..." : "Probar"}
                 </Button>
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 URL donde se enviarán los leads generados por el bot.
               </p>
             </div>
@@ -185,7 +185,7 @@ export default function TenantFormPage() {
                   setForm({ ...form, monthlyMessageLimit: e.target.value })
                 }
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Si se supera este límite el bot deja de responder hasta el
                 próximo mes.
               </p>

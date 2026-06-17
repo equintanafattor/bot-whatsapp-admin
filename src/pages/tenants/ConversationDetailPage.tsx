@@ -82,8 +82,8 @@ export default function ConversationDetailPage() {
     <div className="p-8 max-w-2xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Conversación</h1>
-          <p className="text-gray-500 mt-1 font-mono text-sm">
+          <h1 className="text-2xl font-bold text-foreground">Conversación</h1>
+          <p className="text-muted-foreground mt-1 font-mono text-sm">
             {conversation?.phoneNumber.replace("whatsapp:", "")}
           </p>
         </div>
@@ -98,9 +98,9 @@ export default function ConversationDetailPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Cargando...</p>
+        <p className="text-muted-foreground">Cargando...</p>
       ) : !conversation || conversation.messages.length === 0 ? (
-        <p className="text-gray-500">No hay mensajes en esta conversación.</p>
+        <p className="text-muted-foreground">No hay mensajes en esta conversación.</p>
       ) : (
         <div className="flex flex-col gap-3">
           {/* Mensajes */}
@@ -115,7 +115,7 @@ export default function ConversationDetailPage() {
                   <div
                     className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm ${
                       isInbound
-                        ? "bg-white border text-gray-900 rounded-tl-none"
+                        ? "bg-card border text-foreground rounded-tl-none"
                         : "bg-gray-900 text-white rounded-tr-none"
                     }`}
                   >
@@ -136,7 +136,7 @@ export default function ConversationDetailPage() {
           {/* Input de respuesta — solo si está derivada a humano */}
           {isHandedToHuman && (
             <div className="border-t pt-4">
-              <p className="text-xs text-gray-500 mb-2">
+              <p className="text-xs text-muted-foreground mb-2">
                 📱 Respondé como si fueras el negocio — el mensaje le llegará
                 por WhatsApp
               </p>
@@ -161,7 +161,7 @@ export default function ConversationDetailPage() {
       )}
 
       {conversation && (
-        <p className="text-xs text-gray-400 mt-6 text-center">
+        <p className="text-xs text-muted-foreground mt-6 text-center">
           Iniciada el{" "}
           {new Date(conversation.createdAtUtc).toLocaleString("es-AR")}
         </p>

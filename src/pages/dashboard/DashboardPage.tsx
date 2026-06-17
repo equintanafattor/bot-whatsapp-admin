@@ -22,17 +22,17 @@ function StatCard({
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-500">
+        <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p
-          className={`text-3xl font-bold ${alert && value > 0 ? "text-red-500" : "text-gray-900"}`}
+          className={`text-3xl font-bold ${alert && value > 0 ? "text-red-500" : "text-foreground"}`}
         >
           {value}
         </p>
-        {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>}
       </CardContent>
     </Card>
   );
@@ -50,16 +50,16 @@ export default function DashboardPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 mt-1">Resumen global de la plataforma</p>
+        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground mt-1">Resumen global de la plataforma</p>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Cargando...</p>
+        <p className="text-muted-foreground">Cargando...</p>
       ) : (
         data && (
           <>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
               Total histórico
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -85,7 +85,7 @@ export default function DashboardPage() {
               />
             </div>
 
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
               Últimas 24 horas
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">

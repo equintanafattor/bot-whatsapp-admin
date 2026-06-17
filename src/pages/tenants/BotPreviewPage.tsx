@@ -72,10 +72,10 @@ export default function BotPreviewPage() {
     <div className="p-8 max-w-2xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             Preview — {tenant?.businessName ?? tenantId}
           </h1>
-          <p className="text-gray-500 mt-1 text-sm">
+          <p className="text-muted-foreground mt-1 text-sm">
             Simulá una conversación con el bot sin usar WhatsApp
           </p>
         </div>
@@ -90,10 +90,10 @@ export default function BotPreviewPage() {
       </div>
 
       {/* Chat window */}
-      <div className="bg-gray-50 rounded-lg border h-[500px] flex flex-col">
+      <div className="bg-muted rounded-lg border h-[500px] flex flex-col">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {messages.length === 0 ? (
-            <p className="text-center text-gray-400 text-sm mt-8">
+            <p className="text-center text-muted-foreground text-sm mt-8">
               Escribí un mensaje para empezar la conversación
             </p>
           ) : (
@@ -106,7 +106,7 @@ export default function BotPreviewPage() {
                   className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm whitespace-pre-wrap ${
                     msg.role === "user"
                       ? "bg-gray-900 text-white rounded-tr-none"
-                      : "bg-white border text-gray-900 rounded-tl-none"
+                      : "bg-card border text-foreground rounded-tl-none"
                   }`}
                 >
                   {msg.text}
@@ -116,7 +116,7 @@ export default function BotPreviewPage() {
           )}
           {mutation.isPending && (
             <div className="flex justify-start">
-              <div className="bg-white border px-4 py-2 rounded-2xl rounded-tl-none text-sm text-gray-400">
+              <div className="bg-card border px-4 py-2 rounded-2xl rounded-tl-none text-sm text-muted-foreground">
                 Escribiendo...
               </div>
             </div>
@@ -125,7 +125,7 @@ export default function BotPreviewPage() {
         </div>
 
         {/* Input */}
-        <div className="p-3 border-t bg-white rounded-b-lg flex gap-2">
+        <div className="p-3 border-t bg-card rounded-b-lg flex gap-2">
           <Input
             placeholder="Escribí un mensaje..."
             value={input}

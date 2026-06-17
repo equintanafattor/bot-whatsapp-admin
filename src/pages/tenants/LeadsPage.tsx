@@ -39,10 +39,10 @@ export default function LeadsPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             Leads — {tenant?.businessName ?? tenantId}
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-muted-foreground mt-1">
             {data ? `${data.total} leads generados en total` : ""}
           </p>
         </div>
@@ -60,7 +60,7 @@ export default function LeadsPage() {
         />
       ) : (
         <>
-          <div className="bg-white rounded-lg border mb-4">
+          <div className="bg-card rounded-lg border mb-4">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -80,7 +80,7 @@ export default function LeadsPage() {
                     <TableCell>{lead.context.customerName ?? "—"}</TableCell>
                     <TableCell>{lead.context.selectedService ?? "—"}</TableCell>
                     <TableCell
-                      className="text-sm text-gray-500 max-w-xs truncate"
+                      className="text-sm text-muted-foreground max-w-xs truncate"
                       title={
                         lead.context.extra &&
                         Object.keys(lead.context.extra).length > 0
@@ -103,7 +103,7 @@ export default function LeadsPage() {
                             .join(" | ")
                         : "—"}
                     </TableCell>
-                    <TableCell className="text-gray-500 text-sm">
+                    <TableCell className="text-muted-foreground text-sm">
                       {new Date(lead.completedAtUtc).toLocaleString("es-AR")}
                     </TableCell>
                   </TableRow>
@@ -114,7 +114,7 @@ export default function LeadsPage() {
 
           {totalPages > 1 && (
             <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 Página {page} de {totalPages}
               </p>
               <div className="flex gap-2">

@@ -86,8 +86,8 @@ export default function UsersPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Usuarios</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-foreground">Usuarios</h1>
+        <p className="text-muted-foreground mt-1">
           Todos los usuarios registrados en el sistema
         </p>
       </div>
@@ -100,7 +100,7 @@ export default function UsersPage() {
           title="No hay usuarios registrados"
         />
       ) : (
-        <div className="bg-white rounded-lg border">
+        <div className="bg-card rounded-lg border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -124,10 +124,10 @@ export default function UsersPage() {
                       {user.role}
                     </Badge>
                   </TableCell>
-                  <TableCell className="font-mono text-sm text-gray-500">
+                  <TableCell className="font-mono text-sm text-muted-foreground">
                     {user.tenantId ?? "—"}
                   </TableCell>
-                  <TableCell className="text-gray-500 text-sm">
+                  <TableCell className="text-muted-foreground text-sm">
                     {new Date(user.createdAtUtc).toLocaleDateString("es-AR")}
                   </TableCell>
                   <TableCell className="text-right space-x-2">

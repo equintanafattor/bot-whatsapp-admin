@@ -8,11 +8,11 @@ function StatCard({ title, value, subtitle }: { title: string; value: number; su
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-500">{title}</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-3xl font-bold text-gray-900">{value}</p>
-        {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+        <p className="text-3xl font-bold text-foreground">{value}</p>
+        {subtitle && <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>}
       </CardContent>
     </Card>
   );
@@ -35,16 +35,16 @@ export default function TenantStatsPage() {
     refetchInterval: 30_000, // refresca cada 30 segundos
   });
 
-  if (isLoading) return <p className="p-8 text-gray-500">Cargando métricas...</p>;
+  if (isLoading) return <p className="p-8 text-muted-foreground">Cargando métricas...</p>;
 
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             Métricas — {tenant?.businessName ?? tenantId}
           </h1>
-          <p className="text-gray-500 mt-1 font-mono text-sm">{tenantId}</p>
+          <p className="text-muted-foreground mt-1 font-mono text-sm">{tenantId}</p>
         </div>
         <Button variant="outline" onClick={() => navigate(-1)}>
           Volver
@@ -53,7 +53,7 @@ export default function TenantStatsPage() {
 
       {stats && (
         <>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
             Total histórico
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -63,7 +63,7 @@ export default function TenantStatsPage() {
             <StatCard title="Derivadas a humano" value={stats.handedToHuman} />
           </div>
 
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
             Últimos 7 días
           </h2>
           <div className="grid grid-cols-2 gap-4">

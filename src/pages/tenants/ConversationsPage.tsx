@@ -52,10 +52,10 @@ export default function ConversationsPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             Conversaciones — {tenant?.businessName ?? tenantId}
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-muted-foreground mt-1">
             {data ? `${data.total} conversaciones en total` : ""}
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function ConversationsPage() {
         />
       ) : (
         <>
-          <div className="bg-white rounded-lg border mb-4">
+          <div className="bg-card rounded-lg border mb-4">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -93,7 +93,7 @@ export default function ConversationsPage() {
                   return (
                     <TableRow
                       key={conv.id}
-                      className="cursor-pointer hover:bg-gray-50"
+                      className="cursor-pointer hover:bg-muted"
                       onClick={() =>
                         navigate(
                           `/tenants/${tenantId}/conversations/${conv.id}`,
@@ -108,13 +108,13 @@ export default function ConversationsPage() {
                           {stateInfo.label}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600 max-w-xs truncate">
+                      <TableCell className="text-sm text-muted-foreground max-w-xs truncate">
                         {conv.lastMessage ?? "—"}
                       </TableCell>
-                      <TableCell className="text-gray-500 text-sm">
+                      <TableCell className="text-muted-foreground text-sm">
                         {new Date(conv.updatedAtUtc).toLocaleString("es-AR")}
                       </TableCell>
-                      <TableCell className="text-gray-500 text-sm">
+                      <TableCell className="text-muted-foreground text-sm">
                         {new Date(conv.createdAtUtc).toLocaleDateString(
                           "es-AR",
                         )}
@@ -129,7 +129,7 @@ export default function ConversationsPage() {
           {/* Paginación */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 Página {page} de {totalPages}
               </p>
               <div className="flex gap-2">

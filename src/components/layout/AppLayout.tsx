@@ -18,10 +18,14 @@ import {
   LogOut,
   Menu,
   Smartphone,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { useTheme } from "../../lib/theme-context";
 
 export default function AppLayout() {
   const { user, signOut, isSuperAdmin } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -43,8 +47,8 @@ export default function AppLayout() {
       className={({ isActive }) =>
         `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
           isActive
-            ? "bg-gray-100 text-gray-900"
-            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+            ? "bg-surface text-foreground"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground"
         }`
       }
     >
@@ -56,9 +60,9 @@ export default function AppLayout() {
   const sidebarContent = (
     <>
       <div className="p-6 border-b">
-        <h1 className="text-lg font-bold text-gray-900">Bot WhatsApp</h1>
-        <p className="text-xs text-gray-500 mt-1">{user?.email}</p>
-        <span className="inline-block mt-2 text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 capitalize">
+        <h1 className="text-lg font-bold text-foreground">Bot WhatsApp</h1>
+        <p className="text-xs text-muted-foreground mt-1">{user?.email}</p>
+        <span className="inline-block mt-2 text-xs px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 capitalize">
           {user?.role}
         </span>
       </div>
@@ -128,7 +132,15 @@ export default function AppLayout() {
         )}
       </nav>
 
-      <div className="p-4 border-t">
+      <div className="p-4 border-t space-y-2">
+        <Button
+          variant="ghost"
+          className="w-full flex items-center justify-start gap-3 text-muted-foreground"
+          onClick={toggleTheme}
+        >
+          {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+          {theme === "dark" ? "Modo claro" : "Modo oscuro"}
+        </Button>
         <Button
           variant="outline"
           className="w-full flex items-center gap-2"
@@ -142,9 +154,9 @@ export default function AppLayout() {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-surface">
       {/* Sidebar desktop */}
-      <aside className="hidden md:flex w-64 bg-white border-r flex-col">
+      <aside className="hidden md:flex w-64 bg-card border-r flex-col">
         {sidebarContent}
       </aside>
 
@@ -162,7 +174,7 @@ export default function AppLayout() {
       {/* Main content */}
       <main className="flex-1 overflow-auto">
         {/* Topbar mobile con hamburguesa */}
-        <div className="md:hidden flex items-center gap-3 p-4 border-b bg-white sticky top-0 z-10">
+        <div className="md:hidden flex items-center gap-3 p-4 border-b bg-card sticky top-0 z-10">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -170,7 +182,15 @@ export default function AppLayout() {
           >
             <Menu size={20} />
           </Button>
-          <span className="font-semibold text-gray-900">Bot WhatsApp</span>
+          <span className="font-semibold text-foreground">Bot WhatsApp</span>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="ml-auto"
+            onClick={toggleTheme}
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </Button>
         </div>
 
         <div className="px-4 md:px-8 pt-6">

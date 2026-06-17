@@ -51,14 +51,14 @@ function HealthIndicator({ tenantId }: { tenantId: string }) {
     refetchInterval: 60_000, // refresca cada minuto
   });
 
-  if (isLoading) return <span className="text-gray-400 text-xs">...</span>;
+  if (isLoading) return <span className="text-muted-foreground text-xs">...</span>;
 
   return (
     <div className="flex items-center gap-1">
       <div
         className={`w-2 h-2 rounded-full ${data?.status === "healthy" ? "bg-green-500" : "bg-red-500"}`}
       />
-      <span className="text-xs text-gray-500">
+      <span className="text-xs text-muted-foreground">
         {data?.status === "healthy" ? "OK" : `${data?.errorsLast24h} errores`}
       </span>
     </div>
@@ -166,8 +166,8 @@ export default function TenantsListPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tenants</h1>
-          <p className="text-gray-500 mt-1">Todos los negocios registrados</p>
+          <h1 className="text-2xl font-bold text-foreground">Tenants</h1>
+          <p className="text-muted-foreground mt-1">Todos los negocios registrados</p>
         </div>
         <Button onClick={() => navigate("/tenants/new")}>+ Nuevo tenant</Button>
       </div>
@@ -180,7 +180,7 @@ export default function TenantsListPage() {
           description="Creá tu primer negocio para empezar a usar el bot."
         />
       ) : (
-        <div className="bg-white rounded-lg border">
+        <div className="bg-card rounded-lg border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -208,7 +208,7 @@ export default function TenantsListPage() {
                       <Badge variant="outline">Sin webhook</Badge>
                     )}
                   </TableCell>
-                  <TableCell className="text-gray-500 text-sm">
+                  <TableCell className="text-muted-foreground text-sm">
                     {new Date(tenant.createdAtUtc).toLocaleDateString("es-AR")}
                   </TableCell>
                   <TableCell>

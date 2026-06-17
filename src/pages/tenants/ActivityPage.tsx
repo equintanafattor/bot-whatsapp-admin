@@ -54,10 +54,10 @@ export default function ActivityPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             Actividad — {tenant?.businessName ?? tenantId}
           </h1>
-          <p className="text-gray-500 mt-1">{events.length} eventos</p>
+          <p className="text-muted-foreground mt-1">{events.length} eventos</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex gap-1">
@@ -79,7 +79,7 @@ export default function ActivityPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Cargando...</p>
+        <p className="text-muted-foreground">Cargando...</p>
       ) : events.length === 0 ? (
         <EmptyState
           icon={<Activity size={24} />}
@@ -93,16 +93,16 @@ export default function ActivityPage() {
             return (
               <div
                 key={index}
-                className="flex items-start gap-3 p-3 bg-white rounded-lg border"
+                className="flex items-start gap-3 p-3 bg-card rounded-lg border"
               >
                 <div
                   className={`w-2 h-2 rounded-full mt-2 shrink-0 ${config.color}`}
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-900 truncate">
+                  <p className="text-sm text-foreground truncate">
                     {event.description}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {new Date(event.createdAtUtc).toLocaleString("es-AR")}
                   </p>
                 </div>

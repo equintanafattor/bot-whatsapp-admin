@@ -104,10 +104,10 @@ export default function ToolsPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             Herramientas — {tenant?.businessName ?? tenantId}
           </h1>
-          <p className="text-gray-500 mt-1 text-sm">
+          <p className="text-muted-foreground mt-1 text-sm">
             Herramientas que el bot puede invocar para consultar datos externos
             en tiempo real
           </p>
@@ -121,9 +121,9 @@ export default function ToolsPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Cargando...</p>
+        <p className="text-muted-foreground">Cargando...</p>
       ) : tools.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-muted-foreground">
           <p className="text-lg mb-2">No hay herramientas configuradas</p>
           <p className="text-sm">
             Las herramientas permiten al bot consultar datos externos como
@@ -138,14 +138,14 @@ export default function ToolsPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <code className="text-sm font-mono bg-gray-100 px-2 py-0.5 rounded">
+                      <code className="text-sm font-mono bg-surface px-2 py-0.5 rounded">
                         {tool.name}
                       </code>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                       {tool.description}
                     </p>
-                    <p className="text-xs text-gray-400 truncate max-w-md">
+                    <p className="text-xs text-muted-foreground truncate max-w-md">
                       {tool.webhookUrl}
                     </p>
                   </div>
@@ -188,7 +188,7 @@ export default function ToolsPage() {
                     })
                   }
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Solo letras minúsculas, números y guiones bajos.
                 </p>
               </div>
@@ -202,7 +202,7 @@ export default function ToolsPage() {
                     setForm({ ...form, description: e.target.value })
                   }
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Claude usa esta descripción para decidir cuándo invocar la
                   herramienta.
                 </p>
@@ -217,7 +217,7 @@ export default function ToolsPage() {
                     setForm({ ...form, inputSchema: e.target.value })
                   }
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   JSON Schema de los parámetros que acepta la herramienta.
                 </p>
               </div>
@@ -232,7 +232,7 @@ export default function ToolsPage() {
                     setForm({ ...form, webhookUrl: e.target.value })
                   }
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   URL que recibe los parámetros y devuelve el resultado.
                 </p>
               </div>
