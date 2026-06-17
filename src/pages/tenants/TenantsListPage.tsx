@@ -41,6 +41,7 @@ import {
   Pencil,
   UserPlus,
   Trash2,
+  Smartphone,
 } from "lucide-react";
 
 function HealthIndicator({ tenantId }: { tenantId: string }) {
@@ -232,6 +233,14 @@ export default function TenantsListPage() {
                       )}
                       {iconButton(<Bot size={15} />, "Preview", () =>
                         navigate(`/tenants/${tenant.tenantId}/preview`),
+                      )}
+                      {iconButton(
+                        <Smartphone size={15} />,
+                        "Perfil WhatsApp",
+                        () =>
+                          navigate(
+                            `/tenants/${tenant.tenantId}/whatsapp-profile`,
+                          ),
                       )}
                       {iconButton(<BarChart2 size={15} />, "Métricas", () =>
                         navigate(`/tenants/${tenant.tenantId}/stats`),
