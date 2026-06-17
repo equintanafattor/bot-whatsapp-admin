@@ -318,3 +318,34 @@ export const deleteTenantTool = async (
 ): Promise<void> => {
   await apiClient.delete(`/tenants/${tenantId}/tools/${toolId}`);
 };
+
+export interface WhatsAppProfile {
+  about: string | null;
+  description: string | null;
+  address: string | null;
+  email: string | null;
+  website: string | null;
+  vertical: string | null;
+  logoUrl: string | null;
+}
+
+export interface WhatsAppProfileResponse {
+  configured: boolean;
+  profile?: WhatsAppProfile;
+}
+
+export const getWhatsAppProfile = async (
+  tenantId: string
+): Promise<WhatsAppProfileResponse> => {
+  const { data } = await apiClient.get<WhatsAppProfileResponse>(
+    `/tenants/${tenantId}/whatsapp-profile`
+  );
+  return data;
+};
+
+export const updateWhatsAppProfile = async (
+  tenantId: string,
+  profile: WhatsAppProfile
+): Promise<void> => {
+  await apiClient.put(`/tenants/${tenantId}/whatsapp-profile`, profile);
+};

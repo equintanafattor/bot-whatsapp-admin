@@ -17,6 +17,7 @@ import {
   Trophy,
   LogOut,
   Menu,
+  Smartphone,
 } from "lucide-react";
 
 export default function AppLayout() {
@@ -67,6 +68,11 @@ export default function AppLayout() {
           <>
             {navLink("/dashboard", "Dashboard", <LayoutDashboard size={16} />)}
             {navLink("/", "Tenants", <Building2 size={16} />, true)}
+            {navLink(
+              `/tenants/${user?.tenantId}/whatsapp-profile`,
+              "Perfil de WhatsApp",
+              <Smartphone size={16} />,
+            )}
             {navLink("/users", "Usuarios", <Users size={16} />)}
             {navLink(
               "/change-password",

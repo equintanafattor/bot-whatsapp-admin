@@ -15,6 +15,7 @@ import ActivityPage from "./pages/tenants/ActivityPage";
 import LeadsPage from "./pages/tenants/LeadsPage";
 import BotPreviewPage from "./pages/tenants/BotPreviewPage";
 import ToolsPage from "./pages/tenants/ToolsPage";
+import WhatsAppProfilePage from "./pages/tenants/WhatsAppProfilePage";
 import { Toaster } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
 
@@ -89,6 +90,10 @@ export default function App() {
                 <Route
                   path="/tenants/:tenantId/tools"
                   element={<ToolsPage />}
+                />
+                <Route
+                  path="/tenants/:tenantId/whatsapp-profile"
+                  element={<WhatsAppProfilePage />}
                 />
               </Route>
             </Routes>
