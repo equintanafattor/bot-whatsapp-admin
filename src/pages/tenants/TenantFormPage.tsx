@@ -170,6 +170,9 @@ export default function TenantFormPage() {
                   {testWebhookMutation.isPending ? "Probando..." : "Probar"}
                 </Button>
               </div>
+              <p className="text-xs text-muted-foreground">
+                URL donde se enviarán los leads generados por el bot.
+              </p>
 
               {isSuperAdmin && (
                 <div className="space-y-2">
@@ -190,9 +193,6 @@ export default function TenantFormPage() {
                   </p>
                 </div>
               )}
-              <p className="text-xs text-muted-foreground">
-                URL donde se enviarán los leads generados por el bot.
-              </p>
             </div>
 
             <div className="space-y-2">
