@@ -19,6 +19,7 @@ export interface TenantConfiguration {
   monthlyMessageLimit?: number;
   createdAtUtc: string;
   updatedAtUtc: string;
+  whatsAppSenderSid?: string | null;
 }
 
 export interface TenantStats {
@@ -39,4 +40,5 @@ export interface UpsertTenantRequest {
   systemPrompt: string;
   webhookUrl?: string;
   monthlyMessageLimit?: number;
+  whatsAppSenderSid?: string;
 }

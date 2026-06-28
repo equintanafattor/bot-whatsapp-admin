@@ -33,6 +33,7 @@ export default function TenantFormPage() {
     systemPrompt: "",
     webhookUrl: "",
     monthlyMessageLimit: "",
+    whatsAppSenderSid: "",
   });
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export default function TenantFormPage() {
         systemPrompt: tenant.systemPrompt,
         webhookUrl: tenant.webhookUrl || "",
         monthlyMessageLimit: tenant.monthlyMessageLimit?.toString() ?? "",
+        whatsAppSenderSid: tenant.whatsAppSenderSid || "",
       });
     }
   }, [tenant]);
@@ -76,6 +78,7 @@ export default function TenantFormPage() {
     mutation.mutate({
       ...form,
       webhookUrl: form.webhookUrl || undefined,
+      whatsAppSenderSid: form.whatsAppSenderSid || undefined,
       monthlyMessageLimit: form.monthlyMessageLimit
         ? parseInt(form.monthlyMessageLimit)
         : undefined,
@@ -167,6 +170,26 @@ export default function TenantFormPage() {
                   {testWebhookMutation.isPending ? "Probando..." : "Probar"}
                 </Button>
               </div>
+
+              {isSuperAdmin && (
+                <div className="space-y-2">
+                  <Label htmlFor="whatsAppSenderSid">
+                    WhatsApp Sender SID (opcional)
+                  </Label>
+                  <Input
+                    id="whatsAppSenderSid"
+                    placeholder="XE..."
+                    value={form.whatsAppSenderSid}
+                    onChange={(e) =>
+                      setForm({ ...form, whatsAppSenderSid: e.target.value })
+                    }
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    SID del WhatsApp Sender en Twilio (empieza con XE).
+                    Necesario para editar el perfil de WhatsApp.
+                  </p>
+                </div>
+              )}
               <p className="text-xs text-muted-foreground">
                 URL donde se enviarán los leads generados por el bot.
               </p>
