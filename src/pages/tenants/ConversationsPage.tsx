@@ -26,6 +26,7 @@ const STATE_LABELS: Record<
   active: { label: "Activa", variant: "default" },
   completed: { label: "Completada", variant: "secondary" },
   handed_to_human: { label: "Derivada a humano", variant: "destructive" },
+  bot_paused: { label: "Bot pausado", variant: "outline" },
 };
 
 export default function ConversationsPage() {

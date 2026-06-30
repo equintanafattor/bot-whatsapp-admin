@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getConversationDetail,
   replyToConversation,
+  pauseConversation,
+  resumeConversation,
 } from "../../api/tenants";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -20,6 +22,7 @@ const STATE_LABELS: Record<
   active: { label: "Activa", variant: "default" },
   completed: { label: "Completada", variant: "secondary" },
   handed_to_human: { label: "Derivada a humano", variant: "destructive" },
+  bot_paused: { label: "Bot pausado", variant: "outline" },
 };
 
 export default function ConversationDetailPage() {
@@ -37,7 +40,10 @@ export default function ConversationDetailPage() {
     enabled: !!tenantId && !!conversationId,
     // Polling cada 5 segundos si la conversación está derivada a humano
     refetchInterval: (query) =>
-      query.state.data?.state === "handed_to_human" ? 5000 : false,
+      query.state.data?.state === "handed_to_human" ||
+      query.state.data?.state === "bot_paused"
+        ? 5000
+        : false,
   });
 
   useEffect(() => {
@@ -55,6 +61,28 @@ export default function ConversationDetailPage() {
       toast.success("Mensaje enviado.");
     },
     onError: () => toast.error("Error al enviar el mensaje."),
+  });
+
+  const pauseMutation = useMutation({
+    mutationFn: () => pauseConversation(tenantId!, conversationId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["conversation", tenantId, conversationId],
+      });
+      toast.success("Bot pausado. Atendés vos esta conversación.");
+    },
+    onError: () => toast.error("Error al pausar el bot."),
+  });
+
+  const resumeMutation = useMutation({
+    mutationFn: () => resumeConversation(tenantId!, conversationId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["conversation", tenantId, conversationId],
+      });
+      toast.success("Bot reactivado en esta conversación.");
+    },
+    onError: () => toast.error("Error al reactivar el bot."),
   });
 
   const handleSend = () => {
@@ -77,6 +105,10 @@ export default function ConversationDetailPage() {
     : null;
 
   const isHandedToHuman = conversation?.state === "handed_to_human";
+  const isPaused = conversation?.state === "bot_paused";
+  const isCompleted = conversation?.state === "completed";
+  // El humano puede escribir cuando el bot no está respondiendo (handoff o pausa)
+  const canReply = isHandedToHuman || isPaused;
 
   return (
     <div className="p-8 max-w-2xl">
@@ -91,6 +123,25 @@ export default function ConversationDetailPage() {
           {stateInfo && (
             <Badge variant={stateInfo.variant}>{stateInfo.label}</Badge>
           )}
+          {conversation &&
+            !isCompleted &&
+            (isPaused || isHandedToHuman ? (
+              <Button
+                variant="outline"
+                onClick={() => resumeMutation.mutate()}
+                disabled={resumeMutation.isPending}
+              >
+                {resumeMutation.isPending ? "Reactivando..." : "Reactivar bot"}
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={() => pauseMutation.mutate()}
+                disabled={pauseMutation.isPending}
+              >
+                {pauseMutation.isPending ? "Pausando..." : "Pausar bot"}
+              </Button>
+            ))}
           <Button variant="outline" onClick={() => navigate(-1)}>
             Volver
           </Button>
@@ -100,7 +151,9 @@ export default function ConversationDetailPage() {
       {isLoading ? (
         <p className="text-muted-foreground">Cargando...</p>
       ) : !conversation || conversation.messages.length === 0 ? (
-        <p className="text-muted-foreground">No hay mensajes en esta conversación.</p>
+        <p className="text-muted-foreground">
+          No hay mensajes en esta conversación.
+        </p>
       ) : (
         <div className="flex flex-col gap-3">
           {/* Mensajes */}
@@ -134,7 +187,7 @@ export default function ConversationDetailPage() {
           </div>
 
           {/* Input de respuesta — solo si está derivada a humano */}
-          {isHandedToHuman && (
+          {canReply && (
             <div className="border-t pt-4">
               <p className="text-xs text-muted-foreground mb-2">
                 📱 Respondé como si fueras el negocio — el mensaje le llegará

@@ -278,6 +278,24 @@ export const replyToConversation = async (
   );
 };
 
+export const pauseConversation = async (
+  tenantId: string,
+  conversationId: string,
+): Promise<void> => {
+  await apiClient.post(
+    `/tenants/${tenantId}/conversations/${conversationId}/pause`,
+  );
+};
+
+export const resumeConversation = async (
+  tenantId: string,
+  conversationId: string,
+): Promise<void> => {
+  await apiClient.post(
+    `/tenants/${tenantId}/conversations/${conversationId}/resume`,
+  );
+};
+
 export interface TenantTool {
   id: string;
   tenantId: string;
@@ -335,17 +353,17 @@ export interface WhatsAppProfileResponse {
 }
 
 export const getWhatsAppProfile = async (
-  tenantId: string
+  tenantId: string,
 ): Promise<WhatsAppProfileResponse> => {
   const { data } = await apiClient.get<WhatsAppProfileResponse>(
-    `/tenants/${tenantId}/whatsapp-profile`
+    `/tenants/${tenantId}/whatsapp-profile`,
   );
   return data;
 };
 
 export const updateWhatsAppProfile = async (
   tenantId: string,
-  profile: WhatsAppProfile
+  profile: WhatsAppProfile,
 ): Promise<void> => {
   await apiClient.put(`/tenants/${tenantId}/whatsapp-profile`, profile);
 };
