@@ -367,3 +367,18 @@ export const updateWhatsAppProfile = async (
 ): Promise<void> => {
   await apiClient.put(`/tenants/${tenantId}/whatsapp-profile`, profile);
 };
+
+export const uploadWhatsAppLogo = async (
+  tenantId: string,
+  file: File,
+): Promise<string> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const { data } = await apiClient.post<{ url: string }>(
+    `/tenants/${tenantId}/whatsapp-profile/logo`,
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } },
+  );
+  return data.url;
+};

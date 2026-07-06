@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   getWhatsAppProfile,
   updateWhatsAppProfile,
+  uploadWhatsAppLogo,
   getTenant,
   type WhatsAppProfile,
 } from "../../api/tenants";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { Lock, MapPin, Mail, Globe } from "lucide-react";
+import { Lock, MapPin, Mail, Globe, Camera } from "lucide-react";
 import { toast } from "sonner";
 
 const VERTICALS = [
@@ -83,6 +84,32 @@ export default function WhatsAppProfilePage() {
       ),
     onError: () => toast.error("Error al actualizar el perfil."),
   });
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const uploadMutation = useMutation({
+    mutationFn: (file: File) => uploadWhatsAppLogo(tenantId!, file),
+    onSuccess: (url) => {
+      setForm((f) => ({ ...f, logoUrl: url }));
+      toast.success("Logo subido. Acordate de guardar los cambios.");
+    },
+    onError: () => toast.error("Error al subir el logo."),
+  });
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("El archivo debe ser una imagen.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("La imagen no puede superar los 5 MB.");
+      return;
+    }
+    uploadMutation.mutate(file);
+  };
 
   const businessName = tenant?.businessName ?? "Tu negocio";
   const initials = businessName
@@ -159,9 +186,24 @@ export default function WhatsAppProfilePage() {
                     initials
                   )}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadMutation.isPending}
+                  className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-card border flex items-center justify-center shadow-sm hover:bg-muted disabled:opacity-50"
+                >
+                  <Camera size={15} className="text-muted-foreground" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileSelect}
+                />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Foto de perfil
+                {uploadMutation.isPending ? "Subiendo..." : "Foto de perfil"}
               </p>
             </div>
 
