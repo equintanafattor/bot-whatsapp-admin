@@ -87,6 +87,7 @@ export default function AppLayout() {
               `/tenants/${user.tenantId}`,
               "Mi configuración",
               <Building2 size={16} />,
+              true,
             )}
             {navLink(
               `/tenants/${user.tenantId}/stats`,
