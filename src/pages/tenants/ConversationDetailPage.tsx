@@ -11,6 +11,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
 import { toast } from "sonner";
+import { Pause, Play } from "lucide-react";
 
 const STATE_LABELS: Record<
   string,
@@ -131,7 +132,13 @@ export default function ConversationDetailPage() {
                 onClick={() => resumeMutation.mutate()}
                 disabled={resumeMutation.isPending}
               >
-                {resumeMutation.isPending ? "Reactivando..." : "Reactivar bot"}
+                {resumeMutation.isPending ? (
+                  "Reactivando..."
+                ) : (
+                  <>
+                    <Play size={15} className="mr-1" /> Reactivar bot
+                  </>
+                )}
               </Button>
             ) : (
               <Button
@@ -139,7 +146,13 @@ export default function ConversationDetailPage() {
                 onClick={() => pauseMutation.mutate()}
                 disabled={pauseMutation.isPending}
               >
-                {pauseMutation.isPending ? "Pausando..." : "Pausar bot"}
+                {pauseMutation.isPending ? (
+                  "Pausando..."
+                ) : (
+                  <>
+                    <Pause size={15} className="mr-1" /> Pausar bot
+                  </>
+                )}
               </Button>
             ))}
           <Button variant="outline" onClick={() => navigate(-1)}>
