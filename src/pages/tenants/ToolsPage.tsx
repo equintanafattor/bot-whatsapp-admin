@@ -211,7 +211,7 @@ export default function ToolsPage() {
                 <Label htmlFor="tool-schema">Input Schema (JSON)</Label>
                 <textarea
                   id="tool-schema"
-                  className="w-full h-36 px-3 py-2 border rounded-md text-sm font-mono resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full h-36 px-3 py-2 border border-input bg-background text-foreground rounded-md text-sm font-mono resize-y focus:outline-none focus:ring-2 focus:ring-ring"
                   value={form.inputSchema}
                   onChange={(e) =>
                     setForm({ ...form, inputSchema: e.target.value })

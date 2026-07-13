@@ -139,7 +139,7 @@ export default function TenantFormPage() {
               <Label htmlFor="systemPrompt">System prompt</Label>
               <textarea
                 id="systemPrompt"
-                className="w-full min-h-48 px-3 py-2 border rounded-md text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full min-h-48 px-3 py-2 border border-input bg-background text-foreground rounded-md text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
                 placeholder="Describí cómo debe comportarse el bot para este negocio..."
                 value={form.systemPrompt}
                 onChange={(e) =>
