@@ -84,6 +84,7 @@ export const deleteUser = async (email: string): Promise<void> => {
 export interface ConversationRecord {
   id: string;
   phoneNumber: string;
+  customerName?: string;
   state: string;
   createdAtUtc: string;
   updatedAtUtc: string;
@@ -128,6 +129,7 @@ export interface MessageRecord {
 export interface ConversationDetail {
   id: string;
   phoneNumber: string;
+  customerName?: string;
   state: string;
   createdAtUtc: string;
   updatedAtUtc: string;

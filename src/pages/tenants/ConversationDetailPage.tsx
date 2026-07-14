@@ -12,6 +12,7 @@ import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
 import { toast } from "sonner";
 import { Pause, Play } from "lucide-react";
+import { getAvatarColor, getInitials } from "@/lib/avatar";
 
 const STATE_LABELS: Record<
   string,
@@ -114,11 +115,23 @@ export default function ConversationDetailPage() {
   return (
     <div className="p-8 max-w-2xl">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Conversación</h1>
-          <p className="text-muted-foreground mt-1 font-mono text-sm">
-            {conversation?.phoneNumber.replace("whatsapp:", "")}
-          </p>
+        <div className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-medium"
+            style={{
+              backgroundColor: getAvatarColor(conversation?.customerName),
+            }}
+          >
+            {getInitials(conversation?.customerName)}
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">
+              {conversation?.customerName ?? "Conversación"}
+            </h1>
+            <p className="text-muted-foreground font-mono text-sm">
+              {conversation?.phoneNumber.replace("whatsapp:", "")}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           {stateInfo && (

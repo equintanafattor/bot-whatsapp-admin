@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { getInitials, getAvatarColor } from "../../lib/avatar";
 import { getTenantConversations, getTenant } from "../../api/tenants";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
@@ -102,7 +103,28 @@ export default function ConversationsPage() {
                       }
                     >
                       <TableCell className="font-mono text-sm">
-                        {conv.phoneNumber.replace("whatsapp:", "")}
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-medium shrink-0"
+                            style={{
+                              backgroundColor: getAvatarColor(
+                                conv.customerName,
+                              ),
+                            }}
+                          >
+                            {getInitials(conv.customerName)}
+                          </div>
+                          <div>
+                            {conv.customerName && (
+                              <span className="block text-foreground text-sm font-normal">
+                                {conv.customerName}
+                              </span>
+                            )}
+                            <span className="text-muted-foreground">
+                              {conv.phoneNumber.replace("whatsapp:", "")}
+                            </span>
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Badge variant={stateInfo.variant}>
