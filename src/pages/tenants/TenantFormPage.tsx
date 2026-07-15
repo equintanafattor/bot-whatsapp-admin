@@ -34,6 +34,8 @@ export default function TenantFormPage() {
     webhookUrl: "",
     monthlyMessageLimit: "",
     whatsAppSenderSid: "",
+    messagingProvider: "0",
+    messagingApiKey: "",
   });
 
   useEffect(() => {
@@ -45,6 +47,8 @@ export default function TenantFormPage() {
         webhookUrl: tenant.webhookUrl || "",
         monthlyMessageLimit: tenant.monthlyMessageLimit?.toString() ?? "",
         whatsAppSenderSid: tenant.whatsAppSenderSid || "",
+        messagingProvider: tenant.messagingProvider?.toString() ?? "0",
+        messagingApiKey: tenant.messagingApiKey || "",
       });
     }
   }, [tenant]);
@@ -82,6 +86,8 @@ export default function TenantFormPage() {
       monthlyMessageLimit: form.monthlyMessageLimit
         ? parseInt(form.monthlyMessageLimit)
         : undefined,
+      messagingProvider: parseInt(form.messagingProvider),
+      messagingApiKey: form.messagingApiKey || undefined,
     });
   };
 
@@ -175,23 +181,63 @@ export default function TenantFormPage() {
               </p>
 
               {isSuperAdmin && (
-                <div className="space-y-2">
-                  <Label htmlFor="whatsAppSenderSid">
-                    WhatsApp Sender SID (opcional)
-                  </Label>
-                  <Input
-                    id="whatsAppSenderSid"
-                    placeholder="XE..."
-                    value={form.whatsAppSenderSid}
-                    onChange={(e) =>
-                      setForm({ ...form, whatsAppSenderSid: e.target.value })
-                    }
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    SID del WhatsApp Sender en Twilio (empieza con XE).
-                    Necesario para editar el perfil de WhatsApp.
-                  </p>
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="messagingProvider">
+                      Proveedor de mensajería
+                    </Label>
+                    <select
+                      id="messagingProvider"
+                      className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      value={form.messagingProvider}
+                      onChange={(e) =>
+                        setForm({ ...form, messagingProvider: e.target.value })
+                      }
+                    >
+                      <option value="0">Twilio</option>
+                      <option value="1">Whapi.Cloud</option>
+                    </select>
+                  </div>
+
+                  {form.messagingProvider === "1" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="messagingApiKey">
+                        API Token de Whapi.Cloud
+                      </Label>
+                      <Input
+                        id="messagingApiKey"
+                        type="password"
+                        placeholder="Token del canal..."
+                        value={form.messagingApiKey}
+                        onChange={(e) =>
+                          setForm({ ...form, messagingApiKey: e.target.value })
+                        }
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Token del canal en Whapi.Cloud. Se obtiene del dashboard
+                        después de escanear el QR.
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="whatsAppSenderSid">
+                      WhatsApp Sender SID (opcional, solo Twilio)
+                    </Label>
+                    <Input
+                      id="whatsAppSenderSid"
+                      placeholder="XE..."
+                      value={form.whatsAppSenderSid}
+                      onChange={(e) =>
+                        setForm({ ...form, whatsAppSenderSid: e.target.value })
+                      }
+                      disabled={form.messagingProvider !== "0"}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      SID del WhatsApp Sender en Twilio (empieza con XE).
+                    </p>
+                  </div>
+                </>
               )}
             </div>
 

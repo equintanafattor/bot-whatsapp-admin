@@ -20,6 +20,8 @@ export interface TenantConfiguration {
   createdAtUtc: string;
   updatedAtUtc: string;
   whatsAppSenderSid?: string | null;
+  messagingProvider?: number;
+  messagingApiKey?: string | null;
 }
 
 export interface TenantStats {
@@ -41,4 +43,6 @@ export interface UpsertTenantRequest {
   webhookUrl?: string;
   monthlyMessageLimit?: number;
   whatsAppSenderSid?: string;
+  messagingProvider?: number;
+  messagingApiKey?: string;
 }
