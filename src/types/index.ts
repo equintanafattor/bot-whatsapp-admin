@@ -22,6 +22,7 @@ export interface TenantConfiguration {
   whatsAppSenderSid?: string | null;
   messagingProvider?: number;
   messagingApiKey?: string | null;
+  responseToolSchema?: string | null;
 }
 
 export interface TenantStats {
@@ -45,4 +46,5 @@ export interface UpsertTenantRequest {
   whatsAppSenderSid?: string;
   messagingProvider?: number;
   messagingApiKey?: string;
+  responseToolSchema?: string;
 }

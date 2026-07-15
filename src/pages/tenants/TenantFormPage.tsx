@@ -36,6 +36,7 @@ export default function TenantFormPage() {
     whatsAppSenderSid: "",
     messagingProvider: "0",
     messagingApiKey: "",
+    responseToolSchema: "",
   });
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export default function TenantFormPage() {
         whatsAppSenderSid: tenant.whatsAppSenderSid || "",
         messagingProvider: tenant.messagingProvider?.toString() ?? "0",
         messagingApiKey: tenant.messagingApiKey || "",
+        responseToolSchema: tenant.responseToolSchema || "",
       });
     }
   }, [tenant]);
@@ -235,6 +237,25 @@ export default function TenantFormPage() {
                     />
                     <p className="text-xs text-muted-foreground">
                       SID del WhatsApp Sender en Twilio (empieza con XE).
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="responseToolSchema">
+                      Response Tool Schema (JSON)
+                    </Label>
+                    <textarea
+                      id="responseToolSchema"
+                      className="w-full min-h-32 px-3 py-2 border border-input bg-background text-foreground rounded-md text-xs font-mono resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder='{"type":"object","properties":{...}}'
+                      value={form.responseToolSchema}
+                      onChange={(e) =>
+                        setForm({ ...form, responseToolSchema: e.target.value })
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Schema JSON para structured output. Si está presente, el
+                      LLM usa tool_use en vez de JSON libre. Dejá vacío para
+                      modo legacy.
                     </p>
                   </div>
                 </>
