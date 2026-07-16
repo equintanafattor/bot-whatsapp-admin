@@ -20,6 +20,9 @@ const SEGMENT_LABELS: Record<string, string> = {
   stats: "Métricas",
   new: "Nuevo",
   "change-password": "Cambiar contraseña",
+  templates: "Templates",
+  broadcasts: "Envío masivo",
+  "whatsapp-profile": "Perfil de WhatsApp",
 };
 
 export function Breadcrumbs() {

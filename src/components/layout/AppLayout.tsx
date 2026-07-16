@@ -20,6 +20,8 @@ import {
   Smartphone,
   Sun,
   Moon,
+  Megaphone,
+  FileText,
 } from "lucide-react";
 import { useTheme } from "../../lib/theme-context";
 
@@ -124,6 +126,16 @@ export default function AppLayout() {
               "Preview bot",
               <Bot size={16} />,
             )}
+            {navLink(
+              `/tenants/${user.tenantId}/templates`,
+              "Templates",
+              <FileText size={16} />,
+            )}
+            {navLink(
+              `/tenants/${user.tenantId}/broadcasts`,
+              "Envío masivo",
+              <Megaphone size={16} />,
+            )}  
             {navLink(
               "/change-password",
               "Cambiar contraseña",

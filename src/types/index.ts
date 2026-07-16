@@ -75,3 +75,32 @@ export interface CreateContentTemplateRequest {
     }[];
   };
 }
+
+// ── Broadcasts ─────────────────────────────────────────────────────────────────
+
+export interface BroadcastMessage {
+  id: string;
+  tenantId: string;
+  contentSid: string;
+  templateName: string;
+  audienceFilter: string | null;
+  totalRecipients: number;
+  sentCount: number;
+  failedCount: number;
+  status: "pending" | "sending" | "completed" | "failed";
+  createdAtUtc: string;
+  completedAtUtc: string | null;
+}
+
+export interface SendBroadcastRequest {
+  contentSid: string;
+  templateName: string;
+  productFilter?: string;
+}
+
+export interface BroadcastsResponse {
+  broadcasts: BroadcastMessage[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

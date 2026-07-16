@@ -19,6 +19,7 @@ import BotPreviewPage from "./pages/tenants/BotPreviewPage";
 import ToolsPage from "./pages/tenants/ToolsPage";
 import WhatsAppProfilePage from "./pages/tenants/WhatsAppProfilePage";
 import TemplatesPage from "./pages/tenants/TemplatesPage";
+import BroadcastPage from "./pages/tenants/BroadcastPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,6 +100,10 @@ export default function App() {
                 <Route
                   path="/tenants/:tenantId/templates"
                   element={<TemplatesPage />}
+                />
+                <Route
+                  path="/tenants/:tenantId/broadcasts"
+                  element={<BroadcastPage />}
                 />
               </Route>
             </Routes>

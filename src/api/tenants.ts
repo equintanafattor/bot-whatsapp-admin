@@ -415,3 +415,33 @@ export const deleteContentTemplate = async (
 ): Promise<void> => {
   await apiClient.delete(`/tenants/${tenantId}/templates/${contentSid}`);
 };
+
+// ── Broadcasts ─────────────────────────────────────────────────────────────────
+
+import type { SendBroadcastRequest, BroadcastsResponse } from "../types";
+
+export const sendBroadcast = async (
+  tenantId: string,
+  request: SendBroadcastRequest,
+): Promise<{
+  broadcastId: string;
+  totalRecipients: number;
+  message: string;
+}> => {
+  const { data } = await apiClient.post(
+    `/tenants/${tenantId}/broadcasts`,
+    request,
+  );
+  return data;
+};
+
+export const getBroadcasts = async (
+  tenantId: string,
+  page = 1,
+  pageSize = 20,
+): Promise<BroadcastsResponse> => {
+  const { data } = await apiClient.get<BroadcastsResponse>(
+    `/tenants/${tenantId}/broadcasts?page=${page}&pageSize=${pageSize}`,
+  );
+  return data;
+};

@@ -24,7 +24,7 @@ import {
 } from "../../components/ui/sheet";
 import { toast } from "sonner";
 import { EmptyState } from "../../components/ui/empty-state";
-import { Building2 } from "lucide-react";
+import { Building2, FileText, Megaphone } from "lucide-react";
 import { getTenantHealth } from "../../api/tenants";
 import {
   Tooltip,
@@ -51,7 +51,8 @@ function HealthIndicator({ tenantId }: { tenantId: string }) {
     refetchInterval: 60_000, // refresca cada minuto
   });
 
-  if (isLoading) return <span className="text-muted-foreground text-xs">...</span>;
+  if (isLoading)
+    return <span className="text-muted-foreground text-xs">...</span>;
 
   return (
     <div className="flex items-center gap-1">
@@ -167,7 +168,9 @@ export default function TenantsListPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Tenants</h1>
-          <p className="text-muted-foreground mt-1">Todos los negocios registrados</p>
+          <p className="text-muted-foreground mt-1">
+            Todos los negocios registrados
+          </p>
         </div>
         <Button onClick={() => navigate("/tenants/new")}>+ Nuevo tenant</Button>
       </div>
@@ -241,6 +244,12 @@ export default function TenantsListPage() {
                           navigate(
                             `/tenants/${tenant.tenantId}/whatsapp-profile`,
                           ),
+                      )}
+                      {iconButton(< FileText size={15} />, "Templates", () =>
+                        navigate(`/tenants/${tenant.tenantId}/templates`),
+                      )}
+                      {iconButton(<Megaphone size={15} />, "Envío masivo", () =>
+                        navigate(`/tenants/${tenant.tenantId}/broadcasts`),
                       )}
                       {iconButton(<BarChart2 size={15} />, "Métricas", () =>
                         navigate(`/tenants/${tenant.tenantId}/stats`),
