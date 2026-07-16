@@ -96,6 +96,27 @@ export interface SendBroadcastRequest {
   contentSid: string;
   templateName: string;
   productFilter?: string;
+  variableMapping?: Record<string, string>;
+}
+
+export interface VariableField {
+  key: string;
+  label: string;
+}
+
+export interface BroadcastSampleLead {
+  phoneNumber: string;
+  customerName: string | null;
+  selectedService: string | null;
+  direccion: string | null;
+  total: string | null;
+}
+
+export interface BroadcastPreviewResponse {
+  templateBody: string;
+  sampleMessage: string;
+  audienceCount: number;
+  sampleLead: BroadcastSampleLead | null;
 }
 
 export interface BroadcastsResponse {

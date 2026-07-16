@@ -445,3 +445,39 @@ export const getBroadcasts = async (
   );
   return data;
 };
+
+import type { BroadcastPreviewResponse, VariableField } from "../types";
+
+export const getBroadcastPreview = async (
+  tenantId: string,
+  request: {
+    contentSid: string;
+    productFilter?: string;
+    variableMapping?: Record<string, string>;
+  },
+): Promise<BroadcastPreviewResponse> => {
+  const { data } = await apiClient.post<BroadcastPreviewResponse>(
+    `/tenants/${tenantId}/broadcasts/preview`,
+    request,
+  );
+  return data;
+};
+
+export const getBroadcast = async (
+  tenantId: string,
+  broadcastId: string,
+): Promise<import("../types").BroadcastMessage> => {
+  const { data } = await apiClient.get(
+    `/tenants/${tenantId}/broadcasts/${broadcastId}`,
+  );
+  return data;
+};
+
+export const getVariableFields = async (
+  tenantId: string,
+): Promise<VariableField[]> => {
+  const { data } = await apiClient.get<VariableField[]>(
+    `/tenants/${tenantId}/broadcasts/variable-fields`,
+  );
+  return data;
+};

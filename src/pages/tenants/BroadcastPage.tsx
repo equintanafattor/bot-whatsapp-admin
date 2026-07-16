@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getContentTemplates,
   getBroadcasts,
+  getBroadcast,
   sendBroadcast,
+  getBroadcastPreview,
+  getVariableFields,
   getTenant,
 } from "../../api/tenants";
+import type { BroadcastPreviewResponse } from "../../types";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
@@ -18,6 +22,8 @@ import {
   Clock,
   Loader2,
   Megaphone,
+  Eye,
+  Users,
 } from "lucide-react";
 
 const STATUS_MAP: Record<
@@ -41,6 +47,13 @@ export default function BroadcastPage() {
 
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [productFilter, setProductFilter] = useState("");
+  const [variableMapping, setVariableMapping] = useState<
+    Record<string, string>
+  >({});
+  const [preview, setPreview] = useState<BroadcastPreviewResponse | null>(null);
+  const [activeBroadcastId, setActiveBroadcastId] = useState<string | null>(
+    null,
+  );
 
   const { data: tenant } = useQuery({
     queryKey: ["tenant", tenantId],
@@ -54,33 +67,90 @@ export default function BroadcastPage() {
     enabled: !!tenantId && tenant?.messagingProvider !== 1,
   });
 
+  const { data: fields } = useQuery({
+    queryKey: ["variable-fields", tenantId],
+    queryFn: () => getVariableFields(tenantId!),
+    enabled: !!tenantId,
+  });
+
   const { data: history, isLoading: historyLoading } = useQuery({
     queryKey: ["broadcasts", tenantId],
     queryFn: () => getBroadcasts(tenantId!),
     enabled: !!tenantId,
-    refetchInterval: 10000, // polling cada 10s para ver progreso
+    refetchInterval: 10000,
+  });
+
+  // Polling del broadcast activo
+  const { data: activeBroadcast } = useQuery({
+    queryKey: ["broadcast", tenantId, activeBroadcastId],
+    queryFn: () => getBroadcast(tenantId!, activeBroadcastId!),
+    enabled: !!activeBroadcastId,
+    refetchInterval: 2000,
+  });
+
+  useEffect(() => {
+    if (
+      activeBroadcast &&
+      (activeBroadcast.status === "completed" ||
+        activeBroadcast.status === "failed")
+    ) {
+      setActiveBroadcastId(null);
+      queryClient.invalidateQueries({ queryKey: ["broadcasts", tenantId] });
+      toast.success(
+        `Envío ${activeBroadcast.status === "completed" ? "completado" : "finalizado con errores"}: ${activeBroadcast.sentCount}/${activeBroadcast.totalRecipients} enviados.`,
+      );
+    }
+  }, [activeBroadcast, queryClient, tenantId]);
+
+  // Detectar variables en el template seleccionado
+  const selectedTpl = templates?.find((t) => t.sid === selectedTemplate);
+  const templateBody = preview?.templateBody ?? "";
+  const varMatches = templateBody.match(/\{\{\d+\}\}/g) ?? [];
+  const varNumbers = [
+    ...new Set(varMatches.map((m) => m.replace(/[{}]/g, ""))),
+  ].sort();
+
+  const previewMutation = useMutation({
+    mutationFn: () =>
+      getBroadcastPreview(tenantId!, {
+        contentSid: selectedTemplate,
+        productFilter: productFilter || undefined,
+        variableMapping:
+          Object.keys(variableMapping).length > 0 ? variableMapping : undefined,
+      }),
+    onSuccess: (data) => setPreview(data),
+    onError: () => toast.error("Error al generar la vista previa."),
   });
 
   const sendMutation = useMutation({
-    mutationFn: () => {
-      const tpl = templates?.find((t) => t.sid === selectedTemplate);
-      return sendBroadcast(tenantId!, {
+    mutationFn: () =>
+      sendBroadcast(tenantId!, {
         contentSid: selectedTemplate,
-        templateName: tpl?.friendlyName ?? selectedTemplate,
+        templateName: selectedTpl?.friendlyName ?? selectedTemplate,
         productFilter: productFilter || undefined,
-      });
-    },
+        variableMapping:
+          Object.keys(variableMapping).length > 0 ? variableMapping : undefined,
+      }),
     onSuccess: (data) => {
       toast.success(data.message);
+      setActiveBroadcastId(data.broadcastId);
       queryClient.invalidateQueries({ queryKey: ["broadcasts", tenantId] });
-      setSelectedTemplate("");
-      setProductFilter("");
     },
     onError: () => toast.error("Error al iniciar el envío masivo."),
   });
 
   const approvedTemplates =
     templates?.filter((t) => t.approvalStatus === "approved") ?? [];
+
+  // Cargar preview cuando se selecciona template
+  useEffect(() => {
+    if (selectedTemplate) {
+      setPreview(null);
+      setVariableMapping({});
+      previewMutation.mutate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTemplate]);
 
   if (tenant && tenant.messagingProvider === 1) {
     return (
@@ -113,6 +183,40 @@ export default function BroadcastPage() {
           Volver
         </Button>
       </div>
+
+      {/* Broadcast activo - barra de progreso */}
+      {activeBroadcast && activeBroadcast.status === "sending" && (
+        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 rounded-xl p-4 mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-blue-800 dark:text-blue-300 font-medium flex items-center gap-2">
+              <Loader2 size={16} className="animate-spin" /> Enviando:{" "}
+              {activeBroadcast.templateName}
+            </p>
+            <span className="text-blue-700 dark:text-blue-400 text-sm">
+              {activeBroadcast.sentCount + activeBroadcast.failedCount}/
+              {activeBroadcast.totalRecipients}
+            </span>
+          </div>
+          <div className="w-full bg-blue-200 dark:bg-blue-900 rounded-full h-2">
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+              style={{
+                width: `${((activeBroadcast.sentCount + activeBroadcast.failedCount) / activeBroadcast.totalRecipients) * 100}%`,
+              }}
+            />
+          </div>
+          <div className="flex gap-4 mt-2 text-xs">
+            <span className="text-green-600">
+              {activeBroadcast.sentCount} enviados
+            </span>
+            {activeBroadcast.failedCount > 0 && (
+              <span className="text-red-500">
+                {activeBroadcast.failedCount} fallidos
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Formulario de envío */}
       <div className="bg-card rounded-xl border p-6 mb-6">
@@ -160,31 +264,115 @@ export default function BroadcastPage() {
               placeholder="ej: pañales, zaleas, elastizado..."
             />
             <p className="text-xs text-muted-foreground">
-              Dejalo vacío para enviar a todos los leads. Si escribís un
-              producto, solo se envía a quienes compraron ese producto.
+              Dejalo vacío para enviar a todos los leads.
             </p>
           </div>
 
-          <Button
-            className="bg-[#1D9E75] hover:bg-[#178963] text-white"
-            onClick={() => {
-              if (!selectedTemplate) {
-                toast.error("Seleccioná un template.");
-                return;
-              }
-              if (
-                !confirm(
-                  "¿Confirmar envío masivo? Se enviará a todos los leads que coincidan.",
+          {/* Mapeo de variables */}
+          {varNumbers.length > 0 && fields && (
+            <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
+              <p className="text-sm font-medium text-foreground">
+                Mapear variables del template
+              </p>
+              {varNumbers.map((num) => (
+                <div key={num} className="flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground w-16 shrink-0">{`{{${num}}}`}</span>
+                  <select
+                    className="flex-1 h-9 px-3 border border-input bg-background text-foreground rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                    value={variableMapping[num] ?? ""}
+                    onChange={(e) => {
+                      const newMapping = { ...variableMapping };
+                      if (e.target.value) newMapping[num] = e.target.value;
+                      else delete newMapping[num];
+                      setVariableMapping(newMapping);
+                    }}
+                  >
+                    <option value="">Sin asignar (default: nombre)</option>
+                    {fields.map((f) => (
+                      <option key={f.key} value={f.key}>
+                        {f.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Vista previa */}
+          {preview && (
+            <div className="p-4 bg-muted/50 rounded-lg space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                  <Eye size={14} /> Vista previa
+                </p>
+                <span className="text-sm text-muted-foreground flex items-center gap-1">
+                  <Users size={14} /> {preview.audienceCount} destinatarios
+                </span>
+              </div>
+              <div className="bg-[#0B141A] rounded-lg p-4">
+                <div className="bg-[#1D9E75] rounded-lg p-3 max-w-[85%]">
+                  <p className="text-white text-sm whitespace-pre-wrap">
+                    {preview.sampleMessage}
+                  </p>
+                </div>
+              </div>
+              {preview.sampleLead && (
+                <p className="text-xs text-muted-foreground">
+                  Ejemplo con datos de:{" "}
+                  {preview.sampleLead.customerName ??
+                    preview.sampleLead.phoneNumber}
+                </p>
+              )}
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            {selectedTemplate && (
+              <Button
+                variant="outline"
+                onClick={() => previewMutation.mutate()}
+                disabled={previewMutation.isPending}
+              >
+                <Eye size={16} className="mr-1" />
+                {previewMutation.isPending
+                  ? "Cargando..."
+                  : "Actualizar preview"}
+              </Button>
+            )}
+            <Button
+              className="bg-[#1D9E75] hover:bg-[#178963] text-white"
+              onClick={() => {
+                if (!selectedTemplate) {
+                  toast.error("Seleccioná un template.");
+                  return;
+                }
+                if (!preview) {
+                  toast.error("Generá la vista previa primero.");
+                  return;
+                }
+                if (preview.audienceCount === 0) {
+                  toast.error("No hay destinatarios con ese filtro.");
+                  return;
+                }
+                if (
+                  !confirm(
+                    `¿Confirmar envío a ${preview.audienceCount} destinatarios?`,
+                  )
                 )
-              )
-                return;
-              sendMutation.mutate();
-            }}
-            disabled={sendMutation.isPending || !selectedTemplate}
-          >
-            <Send size={16} className="mr-1" />
-            {sendMutation.isPending ? "Enviando..." : "Enviar"}
-          </Button>
+                  return;
+                sendMutation.mutate();
+              }}
+              disabled={
+                sendMutation.isPending ||
+                !selectedTemplate ||
+                !!activeBroadcastId
+              }
+            >
+              <Send size={16} className="mr-1" />
+              {sendMutation.isPending ? "Enviando..." : "Enviar"}
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -206,10 +394,16 @@ export default function BroadcastPage() {
           {history.broadcasts.map((b) => {
             const status = STATUS_MAP[b.status] ?? STATUS_MAP.pending;
             const StatusIcon = status.icon;
+            const progress =
+              b.totalRecipients > 0
+                ? Math.round(
+                    ((b.sentCount + b.failedCount) / b.totalRecipients) * 100,
+                  )
+                : 0;
             return (
               <div key={b.id} className="bg-card rounded-xl border p-4">
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p className="font-medium text-foreground">
                       {b.templateName}
                     </p>
@@ -229,8 +423,16 @@ export default function BroadcastPage() {
                         <span>Filtro: {b.audienceFilter}</span>
                       )}
                     </div>
+                    {b.status === "sending" && (
+                      <div className="w-full bg-muted rounded-full h-1.5 mt-2">
+                        <div
+                          className="bg-blue-600 h-1.5 rounded-full transition-all duration-500"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    )}
                   </div>
-                  <div className="text-right text-sm">
+                  <div className="text-right text-sm ml-4">
                     <p className="text-foreground">
                       {b.sentCount}/{b.totalRecipients} enviados
                     </p>
