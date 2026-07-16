@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "./components/ui/sonner";
+import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "./lib/auth-context";
 import AppLayout from "./components/layout/AppLayout";
@@ -16,8 +18,7 @@ import LeadsPage from "./pages/tenants/LeadsPage";
 import BotPreviewPage from "./pages/tenants/BotPreviewPage";
 import ToolsPage from "./pages/tenants/ToolsPage";
 import WhatsAppProfilePage from "./pages/tenants/WhatsAppProfilePage";
-import { Toaster } from "./components/ui/sonner";
-import { TooltipProvider } from "./components/ui/tooltip";
+import TemplatesPage from "./pages/tenants/TemplatesPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -94,6 +95,10 @@ export default function App() {
                 <Route
                   path="/tenants/:tenantId/whatsapp-profile"
                   element={<WhatsAppProfilePage />}
+                />
+                <Route
+                  path="/tenants/:tenantId/templates"
+                  element={<TemplatesPage />}
                 />
               </Route>
             </Routes>

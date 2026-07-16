@@ -384,3 +384,34 @@ export const uploadWhatsAppLogo = async (
   );
   return data.url;
 };
+
+// ── Content Templates ──────────────────────────────────────────────────────────
+
+import type { ContentTemplate, CreateContentTemplateRequest } from "../types";
+
+export const getContentTemplates = async (
+  tenantId: string,
+): Promise<ContentTemplate[]> => {
+  const { data } = await apiClient.get<ContentTemplate[]>(
+    `/tenants/${tenantId}/templates`,
+  );
+  return data;
+};
+
+export const createContentTemplate = async (
+  tenantId: string,
+  request: CreateContentTemplateRequest,
+): Promise<ContentTemplate> => {
+  const { data } = await apiClient.post<ContentTemplate>(
+    `/tenants/${tenantId}/templates`,
+    request,
+  );
+  return data;
+};
+
+export const deleteContentTemplate = async (
+  tenantId: string,
+  contentSid: string,
+): Promise<void> => {
+  await apiClient.delete(`/tenants/${tenantId}/templates/${contentSid}`);
+};

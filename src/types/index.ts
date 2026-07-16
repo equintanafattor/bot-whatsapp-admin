@@ -48,3 +48,30 @@ export interface UpsertTenantRequest {
   messagingApiKey?: string;
   responseToolSchema?: string;
 }
+
+// ── Content Templates ──────────────────────────────────────────────────────────
+
+export interface ContentTemplate {
+  sid: string;
+  friendlyName: string;
+  language: string;
+  category: string;
+  approvalStatus: string | null;
+  dateCreated: string;
+  types: Record<string, unknown> | null;
+}
+
+export interface CreateContentTemplateRequest {
+  friendlyName: string;
+  language: string;
+  category: string;
+  body: {
+    text: string;
+    actions?: {
+      type: string;
+      title: string;
+      url?: string;
+      phoneNumber?: string;
+    }[];
+  };
+}
