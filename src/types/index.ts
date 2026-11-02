@@ -24,6 +24,7 @@ export interface TenantConfiguration {
   messagingApiKey?: string | null;
   responseToolSchema?: string | null;
   dataRetentionDays?: number | null;
+  notificationEmail?: string | null;
 }
 
 export interface TenantStats {
@@ -49,6 +50,7 @@ export interface UpsertTenantRequest {
   messagingApiKey?: string;
   responseToolSchema?: string;
   dataRetentionDays?: number;
+  notificationEmail?: string;
 }
 
 // ── Content Templates ──────────────────────────────────────────────────────────

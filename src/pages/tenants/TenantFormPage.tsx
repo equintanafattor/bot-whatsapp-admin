@@ -39,6 +39,7 @@ export default function TenantFormPage() {
     messagingApiKey: "",
     responseToolSchema: "",
     dataRetentionDays: "",
+    notificationEmail: "",
   });
 
   useEffect(() => {
@@ -54,6 +55,7 @@ export default function TenantFormPage() {
         messagingApiKey: tenant.messagingApiKey || "",
         responseToolSchema: tenant.responseToolSchema || "",
         dataRetentionDays: tenant.dataRetentionDays?.toString() ?? "",
+        notificationEmail: tenant.notificationEmail ?? "",
       });
     }
   }, [tenant]);
@@ -98,6 +100,7 @@ export default function TenantFormPage() {
       dataRetentionDays: form.dataRetentionDays
         ? parseInt(form.dataRetentionDays)
         : undefined,
+      notificationEmail: form.notificationEmail || undefined,
     });
   };
 
@@ -290,6 +293,24 @@ export default function TenantFormPage() {
                 </p>
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label htmlFor="notificationEmail">Email para avisos (opcional)</Label>
+              <Input
+                id="notificationEmail"
+                type="email"
+                placeholder="Los usuarios del negocio"
+                value={form.notificationEmail}
+                onChange={(e) =>
+                  setForm({ ...form, notificationEmail: e.target.value })
+                }
+              />
+              <p className="text-xs text-muted-foreground">
+                Acá llegan los avisos: cuando un cliente pide hablar con una persona,
+                cuando se usa el 80% y el 100% del plan, y problemas con el pago.
+                Si lo dejás vacío, les llegan a todos los usuarios del negocio.
+              </p>
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="dataRetentionDays">
