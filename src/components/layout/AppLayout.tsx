@@ -25,6 +25,7 @@ import {
   CreditCard,
   Tags,
   ShieldCheck,
+  UsersRound,
 } from "lucide-react";
 import { useTheme } from "../../lib/theme-context";
 
@@ -144,6 +145,11 @@ export default function AppLayout() {
               `/tenants/${user.tenantId}/billing`,
               "Mi plan",
               <CreditCard size={16} />,
+            )}
+            {navLink(
+              `/tenants/${user.tenantId}/team`,
+              "Equipo",
+              <UsersRound size={16} />,
             )}
             {navLink(
               `/tenants/${user.tenantId}/privacy`,

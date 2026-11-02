@@ -23,6 +23,12 @@ import BroadcastPage from "./pages/tenants/BroadcastPage";
 import BillingPage from "./pages/tenants/BillingPage";
 import PlansPage from "./pages/plans/PlansPage";
 import PrivacyPage from "./pages/tenants/PrivacyPage";
+import TeamPage from "./pages/tenants/TeamPage";
+import {
+  AcceptInvitePage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+} from "./pages/auth/AccountPages";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,6 +57,9 @@ export default function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/accept-invite" element={<AcceptInvitePage />} />
               <Route
                 path="/"
                 element={
@@ -117,6 +126,7 @@ export default function App() {
                   path="/tenants/:tenantId/privacy"
                   element={<PrivacyPage />}
                 />
+                <Route path="/tenants/:tenantId/team" element={<TeamPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

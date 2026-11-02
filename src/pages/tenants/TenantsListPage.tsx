@@ -24,7 +24,7 @@ import {
 } from "../../components/ui/sheet";
 import { toast } from "sonner";
 import { EmptyState } from "../../components/ui/empty-state";
-import { Building2, CreditCard, FileText, Megaphone, ShieldCheck } from "lucide-react";
+import { Building2, CreditCard, FileText, Megaphone, ShieldCheck, UsersRound } from "lucide-react";
 import { getTenantHealth } from "../../api/tenants";
 import {
   Tooltip,
@@ -258,6 +258,9 @@ Se borran también todas sus conversaciones, leads, usuarios, herramientas y env
                       )}
                       {iconButton(<CreditCard size={15} />, "Plan y facturación", () =>
                         navigate(`/tenants/${tenant.tenantId}/billing`),
+                      )}
+                      {iconButton(<UsersRound size={15} />, "Equipo", () =>
+                        navigate(`/tenants/${tenant.tenantId}/team`),
                       )}
                       {iconButton(<ShieldCheck size={15} />, "Datos personales", () =>
                         navigate(`/tenants/${tenant.tenantId}/privacy`),

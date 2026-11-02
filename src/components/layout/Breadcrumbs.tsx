@@ -25,6 +25,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   billing: "Plan y facturación",
   plans: "Planes",
   privacy: "Datos personales",
+  team: "Equipo",
   "whatsapp-profile": "Perfil de WhatsApp",
 };
 
