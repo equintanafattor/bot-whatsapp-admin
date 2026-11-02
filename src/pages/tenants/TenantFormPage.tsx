@@ -38,6 +38,7 @@ export default function TenantFormPage() {
     messagingProvider: "0",
     messagingApiKey: "",
     responseToolSchema: "",
+    dataRetentionDays: "",
   });
 
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function TenantFormPage() {
         messagingProvider: tenant.messagingProvider?.toString() ?? "0",
         messagingApiKey: tenant.messagingApiKey || "",
         responseToolSchema: tenant.responseToolSchema || "",
+        dataRetentionDays: tenant.dataRetentionDays?.toString() ?? "",
       });
     }
   }, [tenant]);
@@ -93,6 +95,9 @@ export default function TenantFormPage() {
         : undefined,
       messagingProvider: parseInt(form.messagingProvider),
       messagingApiKey: form.messagingApiKey || undefined,
+      dataRetentionDays: form.dataRetentionDays
+        ? parseInt(form.dataRetentionDays)
+        : undefined,
     });
   };
 
@@ -285,6 +290,27 @@ export default function TenantFormPage() {
                 </p>
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label htmlFor="dataRetentionDays">
+                Borrar conversaciones después de (días)
+              </Label>
+              <Input
+                id="dataRetentionDays"
+                type="number"
+                min={7}
+                placeholder="No borrar automáticamente"
+                value={form.dataRetentionDays}
+                onChange={(e) =>
+                  setForm({ ...form, dataRetentionDays: e.target.value })
+                }
+              />
+              <p className="text-xs text-muted-foreground">
+                Las conversaciones (y los teléfonos de los envíos masivos) se borran
+                cuando pasan estos días sin actividad. Mínimo 7. Vacío = se guardan
+                hasta que las borres. El bot deja de recordar a esos clientes.
+              </p>
+            </div>
 
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={mutation.isPending}>

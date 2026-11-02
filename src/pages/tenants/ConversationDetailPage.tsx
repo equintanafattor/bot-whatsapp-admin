@@ -168,6 +168,20 @@ export default function ConversationDetailPage() {
                 )}
               </Button>
             ))}
+          {conversation && (
+            <Button
+              variant="outline"
+              onClick={() =>
+                navigate(
+                  `/tenants/${tenantId}/privacy?phone=${encodeURIComponent(
+                    conversation.phoneNumber.replace("whatsapp:", ""),
+                  )}`,
+                )
+              }
+            >
+              Datos del contacto
+            </Button>
+          )}
           <Button variant="outline" onClick={() => navigate(-1)}>
             Volver
           </Button>

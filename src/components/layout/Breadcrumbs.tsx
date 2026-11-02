@@ -24,6 +24,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   broadcasts: "Envío masivo",
   billing: "Plan y facturación",
   plans: "Planes",
+  privacy: "Datos personales",
   "whatsapp-profile": "Perfil de WhatsApp",
 };
 

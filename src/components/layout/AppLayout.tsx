@@ -24,6 +24,7 @@ import {
   FileText,
   CreditCard,
   Tags,
+  ShieldCheck,
 } from "lucide-react";
 import { useTheme } from "../../lib/theme-context";
 
@@ -143,6 +144,11 @@ export default function AppLayout() {
               `/tenants/${user.tenantId}/billing`,
               "Mi plan",
               <CreditCard size={16} />,
+            )}
+            {navLink(
+              `/tenants/${user.tenantId}/privacy`,
+              "Datos personales",
+              <ShieldCheck size={16} />,
             )}  
             {navLink(
               "/change-password",

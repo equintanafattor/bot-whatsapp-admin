@@ -22,6 +22,7 @@ import TemplatesPage from "./pages/tenants/TemplatesPage";
 import BroadcastPage from "./pages/tenants/BroadcastPage";
 import BillingPage from "./pages/tenants/BillingPage";
 import PlansPage from "./pages/plans/PlansPage";
+import PrivacyPage from "./pages/tenants/PrivacyPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -112,6 +113,10 @@ export default function App() {
                   element={<BillingPage />}
                 />
                 <Route path="/plans" element={<PlansPage />} />
+                <Route
+                  path="/tenants/:tenantId/privacy"
+                  element={<PrivacyPage />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>
