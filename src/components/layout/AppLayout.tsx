@@ -22,6 +22,8 @@ import {
   Moon,
   Megaphone,
   FileText,
+  CreditCard,
+  Tags,
 } from "lucide-react";
 import { useTheme } from "../../lib/theme-context";
 
@@ -75,6 +77,7 @@ export default function AppLayout() {
             {navLink("/dashboard", "Dashboard", <LayoutDashboard size={16} />)}
             {navLink("/", "Tenants", <Building2 size={16} />, true)}
             {navLink("/users", "Usuarios", <Users size={16} />)}
+            {navLink("/plans", "Planes", <Tags size={16} />)}
             {navLink(
               "/change-password",
               "Cambiar contraseña",
@@ -135,6 +138,11 @@ export default function AppLayout() {
               `/tenants/${user.tenantId}/broadcasts`,
               "Envío masivo",
               <Megaphone size={16} />,
+            )}
+            {navLink(
+              `/tenants/${user.tenantId}/billing`,
+              "Mi plan",
+              <CreditCard size={16} />,
             )}  
             {navLink(
               "/change-password",

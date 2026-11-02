@@ -20,6 +20,8 @@ import ToolsPage from "./pages/tenants/ToolsPage";
 import WhatsAppProfilePage from "./pages/tenants/WhatsAppProfilePage";
 import TemplatesPage from "./pages/tenants/TemplatesPage";
 import BroadcastPage from "./pages/tenants/BroadcastPage";
+import BillingPage from "./pages/tenants/BillingPage";
+import PlansPage from "./pages/plans/PlansPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -105,6 +107,11 @@ export default function App() {
                   path="/tenants/:tenantId/broadcasts"
                   element={<BroadcastPage />}
                 />
+                <Route
+                  path="/tenants/:tenantId/billing"
+                  element={<BillingPage />}
+                />
+                <Route path="/plans" element={<PlansPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

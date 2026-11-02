@@ -22,6 +22,8 @@ const SEGMENT_LABELS: Record<string, string> = {
   "change-password": "Cambiar contraseña",
   templates: "Templates",
   broadcasts: "Envío masivo",
+  billing: "Plan y facturación",
+  plans: "Planes",
   "whatsapp-profile": "Perfil de WhatsApp",
 };
 

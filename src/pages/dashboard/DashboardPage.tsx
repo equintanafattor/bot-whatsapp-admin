@@ -53,7 +53,7 @@ function UsageTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Negocio</TableHead>
-              <TableHead className="text-right">Mensajes recibidos</TableHead>
+              <TableHead className="text-right">Respuestas del bot</TableHead>
               <TableHead className="text-right">Límite mensual</TableHead>
               <TableHead className="text-right">Llamadas a IA</TableHead>
               <TableHead className="text-right">Tokens (entrada / salida)</TableHead>
@@ -65,7 +65,7 @@ function UsageTable() {
               <TableRow key={t.tenantId}>
                 <TableCell className="font-medium">{t.businessName}</TableCell>
                 <TableCell className="text-right">
-                  {numberFormat.format(t.inboundMessages)}
+                  {numberFormat.format(t.botReplies)}
                 </TableCell>
                 <TableCell className="text-right">
                   {t.monthlyMessageLimit
@@ -77,6 +77,11 @@ function UsageTable() {
                 </TableCell>
                 <TableCell className="text-right">
                   {numberFormat.format(t.inputTokens)} / {numberFormat.format(t.outputTokens)}
+                  {t.inputTokens > 0 && (
+                    <span className="block text-xs text-muted-foreground">
+                      {Math.round((t.cacheReadTokens / t.inputTokens) * 100)}% desde caché
+                    </span>
+                  )}
                 </TableCell>
                 <TableCell className="text-right">
                   {usdFormat.format(t.estimatedCostUsd)}

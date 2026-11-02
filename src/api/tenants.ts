@@ -197,6 +197,8 @@ export interface TenantUsage {
   inboundMessages: number;
   outboundMessages: number;
   llmRequests: number;
+  botReplies: number;
+  cacheReadTokens: number;
   inputTokens: number;
   outputTokens: number;
   estimatedCostUsd: number;

@@ -24,7 +24,7 @@ import {
 } from "../../components/ui/sheet";
 import { toast } from "sonner";
 import { EmptyState } from "../../components/ui/empty-state";
-import { Building2, FileText, Megaphone } from "lucide-react";
+import { Building2, CreditCard, FileText, Megaphone } from "lucide-react";
 import { getTenantHealth } from "../../api/tenants";
 import {
   Tooltip,
@@ -253,6 +253,9 @@ export default function TenantsListPage() {
                       )}
                       {iconButton(<BarChart2 size={15} />, "Métricas", () =>
                         navigate(`/tenants/${tenant.tenantId}/stats`),
+                      )}
+                      {iconButton(<CreditCard size={15} />, "Plan y facturación", () =>
+                        navigate(`/tenants/${tenant.tenantId}/billing`),
                       )}
                       {iconButton(<Pencil size={15} />, "Editar", () =>
                         navigate(`/tenants/${tenant.tenantId}`),
