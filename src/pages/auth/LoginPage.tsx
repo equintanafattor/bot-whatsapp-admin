@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../lib/auth-context';
+import axios from 'axios';
 import { login } from '../../api/tenants';
+import { getApiErrorMessage } from '../../api/client';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -29,8 +31,12 @@ export default function LoginPage() {
         tenantId: response.tenantId,
       });
       navigate('/');
-    } catch {
-      setError('Email o contraseña incorrectos.');
+    } catch (err) {
+      setError(
+        axios.isAxiosError(err) && err.response?.status === 429
+          ? getApiErrorMessage(err, 'Demasiados intentos. Esperá unos minutos.')
+          : 'Email o contraseña incorrectos.',
+      );
     } finally {
       setLoading(false);
     }

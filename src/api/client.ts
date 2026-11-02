@@ -26,3 +26,14 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+/** Mensaje de error legible: usa el texto que devuelve la API (400/429) si existe. */
+export function getApiErrorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data;
+    if (typeof data === 'string' && data.trim()) return data;
+    if (data && typeof data === 'object' && 'detail' in data && typeof data.detail === 'string')
+      return data.detail;
+  }
+  return fallback;
+}

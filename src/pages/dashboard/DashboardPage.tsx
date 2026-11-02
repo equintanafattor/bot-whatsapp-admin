@@ -1,12 +1,97 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { getDashboard } from "../../api/tenants";
+import { getDashboard, getUsage } from "../../api/tenants";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
+
+const numberFormat = new Intl.NumberFormat("es-AR");
+const usdFormat = new Intl.NumberFormat("es-AR", {
+  style: "currency",
+  currency: "USD",
+});
+
+function formatDuration(seconds: number) {
+  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)} min`;
+  return `${Math.floor(seconds / 3600)} h`;
+}
+
+function UsageTable() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["dashboard-usage"],
+    queryFn: () => getUsage(),
+    refetchInterval: 5 * 60_000,
+  });
+
+  if (isLoading) return <p className="text-muted-foreground">Cargando consumo...</p>;
+  if (!data) return null;
+
+  return (
+    <Card className="mb-8">
+      <CardHeader>
+        <CardTitle className="text-base">
+          Consumo de IA — {data.month}
+          <span className="ml-2 font-normal text-muted-foreground">
+            (costo estimado total: {usdFormat.format(data.totalEstimatedCostUsd)})
+          </span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Negocio</TableHead>
+              <TableHead className="text-right">Mensajes recibidos</TableHead>
+              <TableHead className="text-right">Límite mensual</TableHead>
+              <TableHead className="text-right">Llamadas a IA</TableHead>
+              <TableHead className="text-right">Tokens (entrada / salida)</TableHead>
+              <TableHead className="text-right">Costo estimado</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.tenants.map((t) => (
+              <TableRow key={t.tenantId}>
+                <TableCell className="font-medium">{t.businessName}</TableCell>
+                <TableCell className="text-right">
+                  {numberFormat.format(t.inboundMessages)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {t.monthlyMessageLimit
+                    ? numberFormat.format(t.monthlyMessageLimit)
+                    : "Sin límite"}
+                </TableCell>
+                <TableCell className="text-right">
+                  {numberFormat.format(t.llmRequests)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {numberFormat.format(t.inputTokens)} / {numberFormat.format(t.outputTokens)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {usdFormat.format(t.estimatedCostUsd)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <p className="text-xs text-muted-foreground mt-3">
+          El consumo de IA se registra desde esta versión; los meses anteriores no tienen datos.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
 
 function StatCard({
   title,
@@ -15,7 +100,7 @@ function StatCard({
   alert = false,
 }: {
   title: string;
-  value: number;
+  value: number | string;
   subtitle?: string;
   alert?: boolean;
 }) {
@@ -28,7 +113,7 @@ function StatCard({
       </CardHeader>
       <CardContent>
         <p
-          className={`text-3xl font-bold ${alert && value > 0 ? "text-red-500" : "text-foreground"}`}
+          className={`text-3xl font-bold ${alert && value !== 0 && value !== "0s" ? "text-red-500" : "text-foreground"}`}
         >
           {value}
         </p>
@@ -106,6 +191,31 @@ export default function DashboardPage() {
                 alert
               />
             </div>
+
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+              Cola de mensajes
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              <StatCard
+                title="En cola"
+                value={data.queue.pending}
+                subtitle="mensajes esperando respuesta"
+              />
+              <StatCard
+                title="Espera más larga"
+                value={formatDuration(data.queue.oldestPendingSeconds)}
+                subtitle="si supera 1 minuto, algo anda mal"
+                alert={data.queue.oldestPendingSeconds > 60}
+              />
+              <StatCard
+                title="Mensajes fallidos"
+                value={data.queue.failedLast24h}
+                subtitle="sin respuesta del bot en 24h"
+                alert
+              />
+            </div>
+
+            <UsageTable />
 
             <div className="flex gap-3">
               <button

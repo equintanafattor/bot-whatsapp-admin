@@ -169,6 +169,11 @@ export const getTenantHealth = async (
 };
 
 export interface DashboardStats {
+  queue: {
+    pending: number;
+    oldestPendingSeconds: number;
+    failedLast24h: number;
+  };
   totalTenants: number;
   totalConversations: number;
   activeConversations: number;
@@ -182,6 +187,31 @@ export interface DashboardStats {
 
 export const getDashboard = async (): Promise<DashboardStats> => {
   const { data } = await apiClient.get<DashboardStats>("/dashboard");
+  return data;
+};
+
+export interface TenantUsage {
+  tenantId: string;
+  businessName: string;
+  monthlyMessageLimit: number | null;
+  inboundMessages: number;
+  outboundMessages: number;
+  llmRequests: number;
+  inputTokens: number;
+  outputTokens: number;
+  estimatedCostUsd: number;
+}
+
+export interface UsageReport {
+  month: string;
+  totalEstimatedCostUsd: number;
+  tenants: TenantUsage[];
+}
+
+export const getUsage = async (month?: string): Promise<UsageReport> => {
+  const { data } = await apiClient.get<UsageReport>("/dashboard/usage", {
+    params: month ? { month } : undefined,
+  });
   return data;
 };
 

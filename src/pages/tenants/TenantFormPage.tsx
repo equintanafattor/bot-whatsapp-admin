@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTenant, upsertTenant } from "../../api/tenants";
 import { useAuth } from "../../lib/auth-context";
+import { getApiErrorMessage } from "../../api/client";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
@@ -62,8 +63,10 @@ export default function TenantFormPage() {
       toast.success("Tenant guardado correctamente.");
       navigate("/");
     },
-    onError: () => {
-      toast.error("Error al guardar. Verificá los datos e intentá de nuevo.");
+    onError: (error) => {
+      toast.error(
+        getApiErrorMessage(error, "Error al guardar. Verificá los datos e intentá de nuevo."),
+      );
     },
   });
 
@@ -262,24 +265,26 @@ export default function TenantFormPage() {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="monthlyMessageLimit">
-                Límite mensual de mensajes (opcional)
-              </Label>
-              <Input
-                id="monthlyMessageLimit"
-                type="number"
-                placeholder="Sin límite"
-                value={form.monthlyMessageLimit}
-                onChange={(e) =>
-                  setForm({ ...form, monthlyMessageLimit: e.target.value })
-                }
-              />
-              <p className="text-xs text-muted-foreground">
-                Si se supera este límite el bot deja de responder hasta el
-                próximo mes.
-              </p>
-            </div>
+            {isSuperAdmin && (
+              <div className="space-y-2">
+                <Label htmlFor="monthlyMessageLimit">
+                  Límite mensual de mensajes (opcional)
+                </Label>
+                <Input
+                  id="monthlyMessageLimit"
+                  type="number"
+                  placeholder="Sin límite"
+                  value={form.monthlyMessageLimit}
+                  onChange={(e) =>
+                    setForm({ ...form, monthlyMessageLimit: e.target.value })
+                  }
+                />
+                <p className="text-xs text-muted-foreground">
+                  Si se supera este límite el bot deja de responder hasta el
+                  próximo mes.
+                </p>
+              </div>
+            )}
 
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={mutation.isPending}>

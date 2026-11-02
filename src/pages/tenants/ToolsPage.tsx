@@ -8,6 +8,7 @@ import {
   getTenant,
 } from "../../api/tenants";
 import { Button } from "../../components/ui/button";
+import { getApiErrorMessage } from "../../api/client";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Card, CardContent } from "../../components/ui/card";
@@ -74,7 +75,8 @@ export default function ToolsPage() {
       });
       toast.success("Herramienta creada correctamente.");
     },
-    onError: () => toast.error("Error al crear la herramienta."),
+    onError: (error) =>
+      toast.error(getApiErrorMessage(error, "Error al crear la herramienta.")),
   });
 
   const deleteMutation = useMutation({
